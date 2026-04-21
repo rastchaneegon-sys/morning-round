@@ -1518,7 +1518,7 @@ function renderAdmit(){
       var extra=isActive?';outline:2px solid #2563eb;outline-offset:1px':'';
       return'<button class="shift-btn '+cls+'" onclick="toggleShift('+bed+',\''+s.k+'\',this)" style="'+extra+'">'+(done?'&#10003; ':'')+s.l+'</button>';
     }).join('');
-    var domCells=DOMAINS.map(function(dom){return'<td style="min-width:90px;vertical-align:top;padding:1px 2px">'+domainSelect(bed,d,dom)+'</td>';}).join('');
+    var domCells=DOMAINS.map(function(dom){return'<td style="min-width:90px;vertical-align:top;padding:2px 3px">'+domainSelect(bed,d,dom)+'</td>';}).join('');
     var illSel=(function(){
       var illVal2=d.ill&&d.ill.length?d.ill[0]:'';
       var bg2='#f8fafc';var col2='#94a3b8';var bdr2='#e2e8f0';
@@ -1532,13 +1532,13 @@ function renderAdmit(){
         });
         opts2+='</optgroup>';
       });
-      return'<td style="padding:3px 3px;vertical-align:top;min-width:140px">'
+      return'<td style="padding:3px 3px;vertical-align:top;min-width:160px">'
         +'<select class="adm-select" onchange="setIll('+bed+',this.value)" style="width:100%;font-size:10px;border-radius:5px;padding:2px 4px;white-space:normal;background:'+bg2+';color:'+col2+';font-weight:'+(illVal2?'600':'400')+';border:1.5px solid '+bdr2+';margin-bottom:4px;transition:all .15s">'+opts2+'</select>'
         +'</td>';
     }());
     return'<tr style="'+(allShiftDone?'opacity:.55;':'')+'background:'+(allShiftDone?'#f0fdf4':'')+';transition:background .2s"><td style="text-align:center;white-space:nowrap"><span style="display:inline-block;background:#dbeafe;color:#1d4ed8;font-size:12px;padding:2px 8px;border-radius:8px;font-weight:700;min-width:34px;text-align:center;box-shadow:0 1px 3px rgba(37,99,235,.2)">'+bed+'</span><br><button onclick=\"clearAdmitBed(\'+bed+\')\" style=\"margin-top:2px;font-size:9px;padding:1px 4px;border:1px solid #fca5a5;border-radius:4px;background:#fff;color:#dc2626;cursor:pointer;font-weight:600;width:100%\">&#10005; เคลียร์</button></td>'
-      +'<td style="padding:5px 6px"><input class="adm-input" value="'+escHtml(d.name)+'" placeholder="ชื่อ..." onchange="setAdmitFieldNoRender('+bed+',\'name\',this.value)" style="width:170px;font-size:14px;margin-bottom:3px"><br>'
-      +'<input class="adm-input" list="dx-list" value="'+escHtml(d.dx)+'" placeholder="DX..." oninput="updateDxList(this.value)" onchange="setAdmitFieldNoRender('+bed+',\'dx\',this.value)" style="width:170px;font-size:13px;color:#374151"></td>'
+      +'<td style="padding:5px 6px"><input class="adm-input" value="'+escHtml(d.name)+'" placeholder="ชื่อ..." onchange="setAdmitFieldNoRender('+bed+',\'name\',this.value)" style="width:175px;font-size:14px;margin-bottom:3px"><br>'
+      +'<input class="adm-input" list="dx-list" value="'+escHtml(d.dx)+'" placeholder="DX..." oninput="updateDxList(this.value)" onchange="setAdmitFieldNoRender('+bed+',\'dx\',this.value)" style="width:175px;font-size:13px;color:#374151"></td>'
       +illSel
       +domCells
       +'<td style="padding:5px 6px;vertical-align:middle;text-align:center;min-width:80px">'+typeBadge+'</td>'
@@ -1633,17 +1633,17 @@ function renderAdmit(){
     +'<table class="admit-table"><thead>'
     +'<tr style="background:#f8fafc">'
     +'<th rowspan="2" style="width:52px;text-align:center;vertical-align:middle">เตียง</th>'
-    +'<th rowspan="2" style="width:140px;vertical-align:middle">ชื่อ / DX</th>'
-    +'<th rowspan="2" style="width:120px;vertical-align:middle">สภาวะความเจ็บป่วย<br><span style="font-weight:400;font-size:10px">ประเภท / ตัวบ่งชี้</span></th>'
+    +'<th rowspan="2" style="width:180px;vertical-align:middle">ชื่อ / DX</th>'
+    +'<th rowspan="2" style="width:160px;vertical-align:middle">สภาวะความเจ็บป่วย<br><span style="font-weight:400;font-size:10px">ประเภท / ตัวบ่งชี้</span></th>'
     +'<th colspan="4" style="text-align:center;border-bottom:1px solid #e2e8f0">2. การดูแลขั้นต่ำที่ผู้ใช้บริการจะได้รับ (13-16=a | 9-12=b | 5-8=c | 4=d)</th>'
     +'<th rowspan="2" style="width:60px;vertical-align:middle;text-align:center">ประเภท</th>'
     
     +'</tr>'
     +'<tr style="background:#f9f9fb">'
-    +'<th style="width:75px;font-size:9px;font-weight:600;color:#475569">ความสามารถ<br>ปฏิบัติกิจวัตร</th>'
-    +'<th style="width:75px;font-size:9px;font-weight:600;color:#475569">ความต้องการ<br>การสอน</th>'
-    +'<th style="width:75px;font-size:9px;font-weight:600;color:#475569">ความต้องการ<br>ยา/การรักษา</th>'
-    +'<th style="width:75px;font-size:9px;font-weight:600;color:#475569">การบรรเทา<br>อาการเจ็บปวด</th>'
+    +'<th style="width:90px;font-size:9px;font-weight:600;color:#475569">ความสามารถ<br>ปฏิบัติกิจวัตร</th>'
+    +'<th style="width:90px;font-size:9px;font-weight:600;color:#475569">ความต้องการ<br>การสอน</th>'
+    +'<th style="width:90px;font-size:9px;font-weight:600;color:#475569">ความต้องการ<br>ยา/การรักษา</th>'
+    +'<th style="width:90px;font-size:9px;font-weight:600;color:#475569">การบรรเทา<br>อาการเจ็บปวด</th>'
     +'</tr>'
     +'</thead><tbody>'+rows+'</tbody></table></div>';
 }
@@ -1746,10 +1746,10 @@ function renderAssign(){
     var typeBadge=typeFull
       ?'<div style="text-align:center"><span style="display:inline-block;background:'+typeBg+';color:'+typeCol+';font-size:18px;padding:5px 14px;border-radius:8px;font-weight:700;border:2px solid '+typeCol+'">'+typeFull+'</span></div>'
       :'<div style="font-size:11px;color:#b8bec8;text-align:center">—</div>';
-    var domCells=DOMAINS.map(function(dom){return'<td style="min-width:90px;vertical-align:top;padding:1px 2px">'+domainSelect(bed,d,dom)+'</td>';}).join('');
+    var domCells=DOMAINS.map(function(dom){return'<td style="min-width:90px;vertical-align:top;padding:2px 3px">'+domainSelect(bed,d,dom)+'</td>';}).join('');
     return'<tr style="'+(allShiftDone?'opacity:.55':'')+'background:'+(allShiftDone?'#f7f7f4':'')+'"><td style="text-align:center;white-space:nowrap"><span style="display:inline-block;background:#E6F1FB;color:#0C447C;font-size:12px;padding:2px 8px;border-radius:5px;font-weight:500">'+bed+'</span><br><button onclick=\"clearAdmitBed(\'+bed+\')\" style=\"margin-top:2px;font-size:9px;padding:1px 4px;border:1px solid #fca5a5;border-radius:4px;background:#fff;color:#dc2626;cursor:pointer;font-weight:600;width:100%\">&#10005; เคลียร์</button></td>'
-      +'<td style="padding:5px 6px"><input class="adm-input" value="'+escHtml(d.name)+'" placeholder="ชื่อ..." onchange="setAdmitFieldNoRender('+bed+',\'name\',this.value)" style="width:170px;font-size:14px;margin-bottom:3px"><br>'
-      +'<input class="adm-input" list="dx-list" value="'+escHtml(d.dx)+'" placeholder="DX..." oninput="updateDxList(this.value)" onchange="setAdmitFieldNoRender('+bed+',\'dx\',this.value)" style="width:170px;font-size:13px;color:#374151"></td>'
+      +'<td style="padding:5px 6px"><input class="adm-input" value="'+escHtml(d.name)+'" placeholder="ชื่อ..." onchange="setAdmitFieldNoRender('+bed+',\'name\',this.value)" style="width:175px;font-size:14px;margin-bottom:3px"><br>'
+      +'<input class="adm-input" list="dx-list" value="'+escHtml(d.dx)+'" placeholder="DX..." oninput="updateDxList(this.value)" onchange="setAdmitFieldNoRender('+bed+',\'dx\',this.value)" style="width:175px;font-size:13px;color:#374151"></td>'
       +(function(){
         var illVal=d.ill&&d.ill.length?d.ill[0]:'';
         var selOpt=ILL_OPTS.find(function(o){return o.v===illVal;});
@@ -1764,7 +1764,7 @@ function renderAssign(){
           });
           opts+='</optgroup>';
         });
-        return '<td style="padding:3px 3px;vertical-align:top;min-width:140px">'
+        return '<td style="padding:3px 3px;vertical-align:top;min-width:160px">'
           +'<select class="adm-select" onchange="setIll('+bed+',this.value)" style="width:100%;font-size:10px;border-radius:5px;padding:2px 4px;white-space:normal;background:'+bg+';color:'+col+';font-weight:'+(illVal?'600':'400')+';border:1.5px solid '+bdr+';margin-bottom:4px;transition:all .15s">'+opts+'</select>'
           +'<input class="adm-input" value="'+escHtml(d.note||'')+'" placeholder="หมายเหตุ..." onchange="setAdmitFieldNoRender('+bed+',\'note\',this.value)" style="width:100%;font-size:10px">'
           +'</td>';
@@ -2059,9 +2059,9 @@ function openAssignSummary(preselYM){
     '<h3>&#128202; สรุปประเภทผู้ป่วยตาม Assign</h3>'
     +'<div class="msub">เลือกเดือนที่ต้องการดู</div>'
     +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">'
-    +'<select id="sum-month-sel" class="adm-select" style="font-size:12px;padding:5px 8px;flex:1;min-width:140px" onchange="openAssignSummaryRefresh()">'
+    +'<select id="sum-month-sel" class="adm-select" style="font-size:12px;padding:5px 8px;flex:1;min-width:160px" onchange="openAssignSummaryRefresh()">'
     +ymOpts+'</select>'
-    +'<select id="sum-name-filter" class="adm-select" style="flex:1;min-width:140px;font-size:12px;padding:5px 8px" onchange="renderAssignSummary()">'
+    +'<select id="sum-name-filter" class="adm-select" style="flex:1;min-width:160px;font-size:12px;padding:5px 8px" onchange="renderAssignSummary()">'
     +'<option value="">— ทุกคน —</option>'
     +(function(){
       var names={};
