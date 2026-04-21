@@ -1717,10 +1717,26 @@ function renderAdmit(){
 // assign data: {night:{nurses:[{name:'',beds:[]}x8], aides:[{name:'',beds:[]}x3]}, morning:{...}, afternoon:{...}}
 function assignKey(date){return 'assign_'+date;}
 function getAssign(date){
-  try{var s=_DB.getItem(assignKey(date));if(s)return JSON.parse(s);}catch(e){}
+  try{
+    var s=_DB.getItem(assignKey(date));
+    if(s){
+      var data=JSON.parse(s);
+      // migrate: เพิ่มพยาบาลให้ครบ 9 คน และเพิ่ม incharge field
+      ['night','morning','afternoon'].forEach(function(shift){
+        if(!data[shift])data[shift]={nurses:[],aides:[]};
+        var sd=data[shift];
+        // nurses: pad to 9, add incharge if missing
+        while(sd.nurses.length<9)sd.nurses.push({name:'',beds:[],incharge:''});
+        sd.nurses.forEach(function(n){if(n.incharge===undefined)n.incharge='';});
+        // aides: pad to 4
+        while(sd.aides.length<4)sd.aides.push({name:'',beds:[]});
+      });
+      return data;
+    }
+  }catch(e){}
   function makeShift(){
-    var nurses=[];for(var i=0;i<8;i++)nurses.push({name:'',beds:[]});
-    var aides=[];for(var i=0;i<3;i++)aides.push({name:'',beds:[]});
+    var nurses=[];for(var i=0;i<9;i++)nurses.push({name:'',beds:[],incharge:''});
+    var aides=[];for(var i=0;i<4;i++)aides.push({name:'',beds:[]});
     return{nurses:nurses,aides:aides};
   }
   return{night:makeShift(),morning:makeShift(),afternoon:makeShift()};
@@ -1765,9 +1781,13 @@ function renderAssign(){
 
   function personRow(person,pidx,role,color,bgColor){
     var nameId='an-'+role+'-'+pidx;
+    var inchargeCol=role==='nurse'
+      ?'<td style="padding:8px 6px;width:110px"><input class="adm-input" value="'+escHtml(person.incharge||'')+'" placeholder="ตำแหน่ง..." data-role="'+role+'" data-pidx="'+pidx+'" data-field="incharge" onchange="onAssignInchargeChange(this)" style="width:100%;font-size:13px;color:#7c3aed"></td>'
+      :'<td></td>';
     return'<tr style="border-bottom:1px solid #f1f5f9">'
       +'<td style="padding:8px 10px;width:30px;text-align:center"><span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:'+color+';color:#fff;border-radius:50%;font-size:11px;font-weight:700">'+(pidx+1)+'</span></td>'
       +'<td style="padding:8px 6px;width:130px"><input class="adm-input" id="'+nameId+'" value="'+escHtml(person.name||'')+'" placeholder="ชื่อ..." data-role="'+role+'" data-pidx="'+pidx+'" onchange="onAssignNameChange(this)" style="width:100%;font-size:14px"></td>'
+      +inchargeCol
       +'<td style="padding:8px 6px">'+bedInputCell(person,pidx,role)+'</td>'
       +'<td style="padding:8px 6px;text-align:center;width:80px"><span style="font-size:11px;font-weight:700;color:'+color+';background:'+bgColor+';padding:2px 8px;border-radius:6px">'+person.beds.length+' เตียง</span></td>'
       +'</tr>';
@@ -1924,13 +1944,14 @@ function renderAssign(){
 
     +'<div style="background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:14px;overflow:hidden">'
     +'<div style="background:linear-gradient(135deg,#2563eb,#1d4ed8);padding:10px 16px;display:flex;align-items:center;justify-content:space-between">'
-    +'<span style="color:#fff;font-weight:700;font-size:13px">&#128104; พยาบาล (8 คน)</span>'
-    +'<span style="color:#bfdbfe;font-size:12px">เฉลี่ย '+Math.round(allBeds.length/8*10)/10+' เตียง/คน</span>'
+    +'<span style="color:#fff;font-weight:700;font-size:13px">&#128104; พยาบาล (9 คน)</span>'
+    +'<span style="color:#bfdbfe;font-size:12px">เฉลี่ย '+Math.round(allBeds.length/9*10)/10+' เตียง/คน</span>'
     +'</div>'
     +'<table style="width:100%;border-collapse:collapse">'
     +'<thead><tr style="background:#f8fafc">'
     +'<th style="padding:7px 10px;text-align:left;font-size:11px;color:#475569;font-weight:600;border-bottom:1px solid #e2e8f0;width:30px">#</th>'
     +'<th style="padding:7px 10px;text-align:left;font-size:11px;color:#475569;font-weight:600;border-bottom:1px solid #e2e8f0;width:140px">ชื่อพยาบาล</th>'
+    +'<th style="padding:7px 10px;text-align:left;font-size:11px;color:#7c3aed;font-weight:600;border-bottom:1px solid #e2e8f0;width:110px">ตำแหน่ง/Incharge</th>'
     +'<th style="padding:7px 10px;text-align:left;font-size:11px;color:#475569;font-weight:600;border-bottom:1px solid #e2e8f0">เตียงที่รับผิดชอบ <span style="font-weight:400;opacity:.6">(พิมพ์เลข เช่น 1, 3, 6-9)</span></th>'
     +'<th style="padding:7px 10px;text-align:center;font-size:11px;color:#475569;font-weight:600;border-bottom:1px solid #e2e8f0;width:70px">จำนวน</th>'
     +'</tr></thead>'
@@ -1940,13 +1961,14 @@ function renderAssign(){
 
     +'<div style="background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);overflow:hidden">'
     +'<div style="background:linear-gradient(135deg,#10b981,#059669);padding:10px 16px;display:flex;align-items:center;justify-content:space-between">'
-    +'<span style="color:#fff;font-weight:700;font-size:13px">&#128104; ผู้ช่วยเหลือ (3 คน)</span>'
-    +'<span style="color:#a7f3d0;font-size:12px">เฉลี่ย '+Math.round(allBeds.length/3*10)/10+' เตียง/คน</span>'
+    +'<span style="color:#fff;font-weight:700;font-size:13px">&#128104; ผู้ช่วยเหลือ (4 คน)</span>'
+    +'<span style="color:#a7f3d0;font-size:12px">เฉลี่ย '+Math.round(allBeds.length/4*10)/10+' เตียง/คน</span>'
     +'</div>'
     +'<table style="width:100%;border-collapse:collapse">'
     +'<thead><tr style="background:#f8fafc">'
     +'<th style="padding:7px 10px;text-align:left;font-size:11px;color:#475569;font-weight:600;border-bottom:1px solid #e2e8f0;width:30px">#</th>'
     +'<th style="padding:7px 10px;text-align:left;font-size:11px;color:#475569;font-weight:600;border-bottom:1px solid #e2e8f0;width:140px">ชื่อผู้ช่วยเหลือ</th>'
+    +'<th style="padding:7px 10px;border-bottom:1px solid #e2e8f0;width:110px"></th>'
     +'<th style="padding:7px 10px;text-align:left;font-size:11px;color:#475569;font-weight:600;border-bottom:1px solid #e2e8f0">เตียงที่รับผิดชอบ <span style="font-weight:400;opacity:.6">(พิมพ์เลข เช่น 1, 3, 6-9)</span></th>'
     +'<th style="padding:7px 10px;text-align:center;font-size:11px;color:#475569;font-weight:600;border-bottom:1px solid #e2e8f0;width:70px">จำนวน</th>'
     +'</tr></thead>'
@@ -1971,6 +1993,14 @@ function onAssignNameChange(el){
   var role=el.getAttribute('data-role');
   var idx=parseInt(el.getAttribute('data-pidx'));
   setAssignName(role,idx,el.value);
+}
+function onAssignInchargeChange(el){
+  var role=el.getAttribute('data-role');
+  var idx=parseInt(el.getAttribute('data-pidx'));
+  var data=getAssign(admitDate);
+  var shift=admitShift;
+  if(role==='nurse'&&data[shift].nurses[idx])data[shift].nurses[idx].incharge=el.value;
+  saveAssign(admitDate,data);
 }
 function setAssignName(role,idx,val){
   var data=getAssign(admitDate);
