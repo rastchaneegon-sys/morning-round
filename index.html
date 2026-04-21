@@ -15,20 +15,20 @@ body{font-family:'Sarabun',system-ui,sans-serif;background:#ffffff;color:#1a1a18
 .page-section{display:none}
 .page-section.active{display:block}
 /* admit/classify page */
-.admit-table{width:100%;border-collapse:collapse;font-size:11px;background:#ffffff;border-radius:12px;overflow:hidden}
-.admit-table thead th{padding:7px 10px;text-align:left;color:#8a92a0;font-size:11px;font-weight:500;border-bottom:0.5px solid #e2e4e9;background:#f5f6f8;white-space:nowrap}
+.admit-table{width:100%;border-collapse:collapse;font-size:13px;background:#ffffff;border-radius:12px;overflow:hidden}
+.admit-table thead th{padding:7px 10px;text-align:left;color:#8a92a0;font-size:12px;font-weight:500;border-bottom:0.5px solid #e2e4e9;background:#f5f6f8;white-space:nowrap}
 .admit-table tbody tr{border-bottom:0.5px solid #eceef2}
 .admit-table tbody tr:hover{background:#f5f6f8}
 .admit-table tbody td{padding:5px 8px;vertical-align:middle}
 .shift-cell{display:flex;gap:4px;align-items:center}
-.shift-btn{padding:5px 12px;font-size:11px;border-radius:8px;cursor:pointer;border:1.5px solid transparent;font-weight:600;transition:all .15s;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.shift-btn{padding:6px 12px;font-size:13px;border-radius:8px;cursor:pointer;border:1.5px solid transparent;font-weight:600;transition:all .15s;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.05)}
 .sb-done{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
 .sb-done:hover{background:#bbf7d0}
 .sb-done.on{background:#10b981;color:#ffffff;border-color:#10b981;box-shadow:0 2px 6px rgba(16,185,129,.4)}
 .sb-pend{background:#f5f6f8;color:#8a92a0;border-color:#e2e4e9}
 .sb-pend:hover{background:#eceef2}
-.adm-input{font-size:12px;padding:3px 6px;border:0.5px solid #e2e4e9;border-radius:5px;background:#fff;color:#1a1a18;width:100%}
-.adm-select{font-size:12px;padding:3px 6px;border:0.5px solid #e2e4e9;border-radius:5px;background:#fff;color:#1a1a18;width:100%}
+.adm-input{font-size:14px;padding:3px 6px;border:0.5px solid #e2e4e9;border-radius:5px;background:#fff;color:#1a1a18;width:100%}
+.adm-select{font-size:14px;padding:3px 6px;border:0.5px solid #e2e4e9;border-radius:5px;background:#fff;color:#1a1a18;width:100%}
 .pt-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:5px;font-weight:500}
 .pt-cri{background:#FCEBEB;color:#A32D2D}
 .pt-cri2{background:#FAEEDA;color:#854F0B}
@@ -38,7 +38,7 @@ body{font-family:'Sarabun',system-ui,sans-serif;background:#ffffff;color:#1a1a18
 .cls-group{background:#ffffff;border:none;border-radius:14px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07)}
 .cls-group-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f5f6f8;font-size:13px;font-weight:500;color:#1a1a18}
 .cls-group-hdr .cnt{font-size:11px;color:#8a92a0;font-weight:400}
-.cls-table{width:100%;border-collapse:collapse;font-size:12px}
+.cls-table{width:100%;border-collapse:collapse;font-size:13px}
 .cls-table thead th{padding:6px 10px;text-align:left;color:#8a92a0;font-size:11px;font-weight:500;border-bottom:0.5px solid #eceef2;background:#f9f9fb}
 .cls-table tbody tr{border-bottom:0.5px solid #eceef2}
 .cls-table tbody tr:last-child{border-bottom:none}
@@ -61,9 +61,9 @@ h1{font-size:18px;font-weight:700;color:#1e293b}
 .topbar .tsub{color:#93c5fd;font-size:12px;margin-top:2px}
 .tsub{font-size:12px;color:#6b7480;margin-top:2px}
 .datebar{display:flex;align-items:center;gap:10px;background:#f5f6f8;border-radius:10px;padding:8px 14px;margin-bottom:1rem;flex-wrap:wrap}
-.datebar label{font-size:12px;color:#6b7480;font-weight:500}
+.datebar label{font-size:13px;color:#6b7480;font-weight:500}
 .datebar input[type=date]{font-size:15px;padding:7px 12px;border:1.5px solid #d0d4dc;border-radius:8px;background:#fff;color:#1a1a18;cursor:pointer;font-weight:500}
-.dinfo{font-size:12px;color:#6b7480;margin-left:2px}
+.dinfo{font-size:13px;color:#6b7480;margin-left:2px}
 .dinfo strong{color:#1a1a18}
 .day-tabs{display:flex;gap:4px;flex-wrap:wrap}
 .dtab{padding:9px 22px;font-size:15px;border:1.5px solid #e2e8f0;border-radius:9px;cursor:pointer;background:#ffffff;color:#374151;transition:all .15s;font-weight:600}
@@ -72,41 +72,41 @@ h1{font-size:18px;font-weight:700;color:#1e293b}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.25rem}
 @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
 .sc{background:#f5f6f8;border-radius:8px;padding:9px;text-align:center}
-.sc .n{font-size:26px;font-weight:700}.sc .l{font-size:11px;color:#64748b;margin-top:4px;font-weight:500}
+.sc .n{font-size:26px;font-weight:700}.sc .l{font-size:12px;color:#64748b;margin-top:4px;font-weight:500}
 .sc-high{background:#ffffff;border:none;border-left:4px solid #ef4444;border-radius:12px;padding:12px 16px;grid-column:1/-1;box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.sc-high .l{font-size:11px;color:#ef4444;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.sc-high .l{font-size:12px;color:#ef4444;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
 .beds-wrap{display:flex;flex-wrap:wrap;gap:4px;min-height:22px;align-items:center}
-.bed-chip{display:inline-block;background:#dc2626;color:#ffffff;font-size:11px;padding:2px 8px;border-radius:5px;font-weight:600}
+.bed-chip{display:inline-block;background:#dc2626;color:#ffffff;font-size:12px;padding:2px 8px;border-radius:5px;font-weight:600}
 .no-high{font-size:11px;color:#dc2626;opacity:.5}
 .prog{height:5px;background:#e2e8f0;border-radius:10px;margin-bottom:1.25rem;overflow:hidden}
 .prog .f{height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:10px;transition:width .4s}
 .filters{display:flex;gap:8px;margin-bottom:.75rem;flex-wrap:wrap;align-items:center}
-.filters select{font-size:12px;padding:4px 7px;border:0.5px solid #e2e4e9;border-radius:6px;background:#fff;color:#1a1a18}
-.btn{padding:5px 12px;border:0.5px solid #d0d4dc;border-radius:6px;background:transparent;color:#1a1a18;font-size:12px;cursor:pointer;transition:background .15s}
+.filters select{font-size:13px;padding:4px 7px;border:0.5px solid #e2e4e9;border-radius:6px;background:#fff;color:#1a1a18}
+.btn{padding:5px 12px;border:0.5px solid #d0d4dc;border-radius:6px;background:transparent;color:#1a1a18;font-size:13px;cursor:pointer;transition:background .15s}
 .btn:hover{background:#f5f6f8}
 .btn-blue{background:#2563eb;color:#ffffff;border-color:#2563eb;box-shadow:0 2px 6px rgba(37,99,235,.4)}.btn-blue:hover{background:#1d4ed8}
 .btn-blue:disabled{background:#93c5fd;border-color:#93c5fd;color:#fff;cursor:not-allowed}
-.btn-sm{font-size:11px;padding:3px 9px}
+.btn-sm{font-size:12px;padding:4px 10px}
 .tw{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px}
-thead th{text-align:left;padding:7px 8px;font-weight:500;color:#8a92a0;border-bottom:0.5px solid #e2e4e9;white-space:nowrap;font-size:11px;background:#f5f6f8}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{text-align:left;padding:7px 8px;font-weight:500;color:#8a92a0;border-bottom:0.5px solid #e2e4e9;white-space:nowrap;font-size:12px;background:#f5f6f8}
 tbody tr{border-bottom:0.5px solid #eceef2}
 tbody tr:hover{background:#f5f6f8}
 tbody td{padding:6px 8px;vertical-align:middle}
-.bed-b{display:inline-block;background:#dbeafe;color:#1d4ed8;font-size:13px;padding:3px 10px;border-radius:8px;font-weight:700;min-width:34px;text-align:center;box-shadow:0 1px 3px rgba(37,99,235,.2)}
+.bed-b{display:inline-block;background:#dbeafe;color:#1d4ed8;font-size:15px;padding:3px 10px;border-radius:8px;font-weight:700;min-width:34px;text-align:center;box-shadow:0 1px 3px rgba(37,99,235,.2)}
 .rb{display:inline-block;font-size:10px;padding:2px 6px;border-radius:5px;font-weight:500;white-space:nowrap}
 .r-high{background:#fee2e2;color:#dc2626}.r-med{background:#fef3c7;color:#b45309}.r-low{background:#dcfce7;color:#16a34a}
-.abtn{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border:0.5px solid #d0d4dc;border-radius:5px;background:transparent;color:#1a1a18;cursor:pointer;white-space:nowrap;transition:all .15s}
+.abtn{display:inline-flex;align-items:center;gap:4px;font-size:13px;padding:4px 10px;border:0.5px solid #d0d4dc;border-radius:5px;background:transparent;color:#1a1a18;cursor:pointer;white-space:nowrap;transition:all .15s}
 .abtn:hover{background:#f5f6f8}
 .abtn.done{background:#dcfce7;color:#15803d;border-color:#86efac}
 .abtn.alert{background:#fef3c7;color:#b45309;border-color:#fde68a}
 .abtn.danger{background:#fee2e2;color:#dc2626;border-color:#fca5a5}
-.wband-btn{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border:0.5px solid #d0d4dc;border-radius:5px;background:transparent;color:#1a1a18;cursor:pointer;white-space:nowrap;transition:all .15s}
+.wband-btn{display:inline-flex;align-items:center;gap:4px;font-size:13px;padding:4px 10px;border:0.5px solid #d0d4dc;border-radius:5px;background:transparent;color:#1a1a18;cursor:pointer;white-space:nowrap;transition:all .15s}
 .wband-btn:hover{background:#f5f6f8}
 .wband-btn.ok{background:#dcfce7;color:#15803d;border-color:#86efac}
 .wband-btn.ng{background:#fee2e2;color:#dc2626;border-color:#fca5a5}
 .done-row td{opacity:.5}
-.ni{font-size:11px;width:85px;padding:2px 5px;border:0.5px solid #e2e4e9;border-radius:5px;background:#fff;color:#1a1a18}
+.ni{font-size:14px;width:105px;padding:2px 5px;border:0.5px solid #e2e4e9;border-radius:5px;background:#fff;color:#1a1a18}
 .hist-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 1px;vertical-align:middle}
 .modal-bd{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:flex-start;justify-content:center;z-index:999;padding-top:1rem;overflow-y:auto}
 .modal{background:#fff;border-radius:12px;padding:1.25rem;width:490px;max-width:96vw;border:0.5px solid #e2e4e9;margin-bottom:1rem;box-shadow:0 4px 24px rgba(0,0,0,.12)}
@@ -120,10 +120,10 @@ tbody td{padding:6px 8px;vertical-align:middle}
 .sbox.med .sn,.sbox.med .srisk{color:#b45309}
 .sbox.high .sn,.sbox.high .srisk{color:#dc2626}
 .srisk{font-size:12px;font-weight:500;text-align:right;line-height:1.4}
-.fp{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f5f6f8;border-radius:6px;margin-bottom:.75rem;font-size:11px}
+.fp{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f5f6f8;border-radius:6px;margin-bottom:.75rem;font-size:13px}
 .fp-bar{flex:1;height:4px;background:#e2e4e9;border-radius:2px;overflow:hidden}
 .fp-fill{height:100%;border-radius:2px;background:#2563eb;transition:width .25s}
-.cbox{border-radius:8px;padding:9px 12px;margin-bottom:.75rem;font-size:11px;line-height:1.7}
+.cbox{border-radius:8px;padding:9px 12px;margin-bottom:.75rem;font-size:13px;line-height:1.7}
 .cbox.med{background:#fef3c7;color:#92400e}.cbox.high{background:#fee2e2;color:#991b1b}
 .cbox strong{display:block;font-weight:500;font-size:12px;margin-bottom:3px}
 .cbox ul{padding-left:14px}
@@ -132,8 +132,8 @@ tbody td{padding:6px 8px;vertical-align:middle}
 .fi.yes{background:#fef2f2;border-bottom-color:transparent;margin-bottom:1px}
 .fi.no{background:#f0fdf4;border-bottom-color:transparent;margin-bottom:1px}
 .fi.err{background:#fffbeb;border-left:3px solid #f59e0b;padding-left:9px;border-bottom-color:transparent;margin-bottom:1px}
-.fnum{font-size:11px;color:#8a92a0;width:18px;flex-shrink:0;font-weight:500}
-.flbl{font-size:12px;flex:1;line-height:1.35}
+.fnum{font-size:12px;color:#8a92a0;width:18px;flex-shrink:0;font-weight:500}
+.flbl{font-size:13px;flex:1;line-height:1.35}
 .ftog{display:flex;gap:3px;flex-shrink:0}
 .fy,.fn{padding:3px 11px;font-size:11px;border-radius:5px;cursor:pointer;font-weight:500;border:1.5px solid transparent;transition:all .15s}
 .fy{background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1}.fy:hover{background:#F09595}.fy.on{background:#A32D2D;color:#FCEBEB;border-color:#A32D2D}
@@ -292,7 +292,7 @@ function addDays(iso,n){var d=new Date(iso+'T00:00:00');d.setDate(d.getDate()+n)
 function daysDiff(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000);}
 
 var curDate=todayISO();
-var FIXED_BEDS=[1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27];
+var FIXED_BEDS=[1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
 var DEFAULT_FOLEY=[6,7,8,10,12,13,14,16,18,24,25,26];
 
 function dayTemplate(iv,foley,cre,crab){return{iv:iv!==undefined?iv:true,foley:foley!==undefined?foley:false,cre:cre!==undefined?cre:false,crab:crab!==undefined?crab:false,f:Array(13).fill(null),fOk:false,wristband:null,wristbandOk:false,iv2:{site:'',sites:['','','',''],insertDate:'',days:'',changeDate:'',leak:null,ph:'-1'},ivOk:false,fo:{insertDate:'',days:'',changeDate:'',totalDays:'',reason:'',necessity:null,secure:null,floor:null,closed:null},foOk:false,note:''};}
@@ -377,7 +377,7 @@ function loadData(){
 }
 function saveData(){try{_DB.setItem('mr_v11',JSON.stringify(P));}catch(e){}}
 
-var P=loadData();
+var P=[];  // Firebase จะโหลดข้อมูลและเรียก loadData() ให้หลัง connect
 var curPh=null,curU=null,curLeak=null,curWB=null;
 
 function isDone(p,date){var d=getDay(p,date);return d.wristbandOk&&d.fOk&&(!d.iv||d.ivOk)&&(!d.foley||d.foOk);}
@@ -490,7 +490,7 @@ function render(){
   var cdTxtFo='';if(d.fo.changeDate){var diffFo=daysDiff(curDate,d.fo.changeDate);var cdsFo=diffFo<0?'color:#A32D2D':diffFo<=1?'color:#854F0B':'color:#3B6D11';cdTxtFo='<br><span style="font-size:10px;'+cdsFo+'">เปลี่ยน '+thaiDate(d.fo.changeDate)+'</span>';}
   return'<button class="abtn '+(nec?'danger':ng?'alert':'done')+'" onclick="openFo('+p.id+')" style="flex-direction:column;align-items:flex-start;line-height:1.3">&#10003; Foley'+(nec?' &#9888; หมดความจำเป็น':ng?' &#9888; ไม่ปฏิบัติ':'')+cdTxtFo+'</button>';})();
     var cfgBtn='<button class="abtn" style="font-size:10px;padding:2px 8px" onclick="openBedConfig('+p.id+')">&#9881; ตั้งค่า</button>';
-return'<tr class="'+(done?'done-row':'')+'" id="row-'+p.id+'"><td><span class="bed-b">'+p.bed+'</span></td><td style="font-size:12px;white-space:nowrap;color:#1a1a18">'+(getNameFromAdmit(p.bed,curDate)||p.name||'<span style="color:#b8bec8;font-size:11px">—</span>')+'</td><td style="text-align:center">'+cfgBtn+'</td><td style="text-align:center">'+wbb+'</td><td style="text-align:center">'+fb+'</td><td style="text-align:center">'+ib+'</td><td style="text-align:center">'+fb2+'</td><td><input class="ni" value="'+d.note+'" placeholder="บันทึก..." onchange="setN('+p.id+',this.value)"></td></tr>';
+return'<tr class="'+(done?'done-row':'')+'" id="row-'+p.id+'"><td><span class="bed-b">'+p.bed+'</span></td><td style="font-size:14px;white-space:nowrap;color:#1a1a18">'+(getNameFromAdmit(p.bed,curDate)||p.name||'<span style="color:#b8bec8;font-size:11px">—</span>')+'</td><td style="text-align:center">'+cfgBtn+'</td><td style="text-align:center">'+wbb+'</td><td style="text-align:center">'+fb+'</td><td style="text-align:center">'+ib+'</td><td style="text-align:center">'+fb2+'</td><td><input class="ni" value="'+d.note+'" placeholder="บันทึก..." onchange="setN('+p.id+',this.value)"></td></tr>';
   }).join('');
 }
 function setN(id,v){var p=P.find(function(x){return x.id===id;});if(p){getDay(p,curDate).note=v;saveData();}}
@@ -602,15 +602,18 @@ function openIV(id){
   var p=P.find(function(x){return x.id===id;});if(!p)return;var _chk=getDay(p,curDate);if(!_chk.iv)return;
   var d=getDay(p,curDate),iv=d.iv2;curPh=iv.ph;curLeak=iv.leak;
   var cd=iv.insertDate?addDays(iv.insertDate,4):'';
-  showModal('<h3>ตรวจ IV Line</h3><div class="msub">เตียง '+p.bed+' | <strong>'+thaiDate(curDate)+'</strong></div><div class="section-lbl">ตำแหน่งแทง (Site) — สูงสุด 4 ตำแหน่ง</div>'+(function(){var _sites=iv.sites&&iv.sites.length===4?iv.sites:(iv.site?[iv.site,'','','']:['','','','']);return _sites.map(function(sv,i){var _opts='<option value=\"\">'+(i+1)+'. -- เลือก --</option>'+IVS.map(function(s){return'<option value=\"'+s+'\" '+(sv===s?'selected':'')+'>'+s+'</option>';}).join('')+'<option value=\"อื่นๆ\" '+(sv&&IVS.indexOf(sv)<0?'selected':'')+'>อื่นๆ</option>';return'<div style=\"display:flex;align-items:center;gap:6px;margin-bottom:5px\"><span style=\"font-size:10px;color:#94a3b8;min-width:14px;font-weight:700\">'+(i+1)+'.</span><select id=\"ivs'+i+'\" style=\"flex:1;font-size:12px;padding:5px 8px;border:1px solid #e2e8f0;border-radius:8px\">'+_opts+'</select></div>';}).join('');})()+'<div class="section-lbl">สภาพสาย IV</div><div class="mf"><label>Phlebitis Grade</label><div class="phg">'+PHD.map(function(ph){return'<div class="pho'+(String(iv.ph)===String(ph.g)?' '+ph.s:'')+'" onclick="sPh(this,'+ph.g+',\''+ph.s+'\')">'+ph.l+'</div>';}).join('')+'</div></div><div class="mf"><label>IV ติด / ไม่ติด</label><div class="leak-wrap"><div class="leak-btn lk-no'+(iv.leak===false?' on':'')+'" id="lkNo" onclick="selLeak(false)">ไม่ติด</div><div class="leak-btn lk-yes'+(iv.leak===true?' on':'')+'" id="lkYes" onclick="selLeak(true)">ติด</div></div></div><div class="mft"><button class="btn" onclick="closeModal()">ยกเลิก</button><button class="btn btn-blue" onclick="svIV('+id+')">บันทึก</button></div>');
+  showModal('<h3>ตรวจ IV Line</h3><div class="msub">เตียง '+p.bed+' | <strong>'+thaiDate(curDate)+'</strong></div><div class="section-lbl">ตำแหน่งที่พบ Phlebitis</div><div class="mf"><input type="text" id="ivsite" value="'+(iv.site||'')+'" placeholder="เช่น หลังมือ L, ข้อพับแขน R" style="width:100%;font-size:13px;padding:7px 10px;border:1px solid #e2e8f0;border-radius:8px"></div><div class="section-lbl">สภาพสาย IV</div><div class="mf"><label>Phlebitis Grade</label><div class="phg">'+PHD.map(function(ph){return'<div class="pho'+(String(iv.ph)===String(ph.g)?' '+ph.s:'')+'" onclick="sPh(this,'+ph.g+',\''+ph.s+'\')">'+ph.l+'</div>';}).join('')+'</div></div><div class="mf"><label>IV ติด / ไม่ติด</label><div class="leak-wrap"><div class="leak-btn lk-no'+(iv.leak===false?' on':'')+'" id="lkNo" onclick="selLeak(false)">ไม่ติด</div><div class="leak-btn lk-yes'+(iv.leak===true?' on':'')+'" id="lkYes" onclick="selLeak(true)">ติด</div></div></div><div class="mft"><button class="btn" onclick="closeModal()">ยกเลิก</button><button class="btn btn-blue" onclick="svIV('+id+')">บันทึก</button></div>');
 }
 function onIVdc(){var v=document.getElementById('ivdt').value;if(v){var days=Math.max(0,Math.floor((new Date(curDate+'T00:00:00')-new Date(v+'T00:00:00'))/86400000));var e=document.getElementById('ivdy');if(e)e.value=days;var ec=document.getElementById('ivcd');if(ec){ec.value=addDays(v,4);}updCD();}}
 function updCD(){var c=document.getElementById('ivcd'),i=document.getElementById('cdi');if(c&&i)i.innerHTML=cdInfo(c.value);}
 function sPh(el,g,s){curPh=String(g);document.querySelectorAll('.pho').forEach(function(e){e.className='pho';});el.className='pho '+s;}
 function selLeak(val){curLeak=val;var no=document.getElementById('lkNo'),yes=document.getElementById('lkYes');if(no)no.className='leak-btn lk-no'+(val===false?' on':'');if(yes)yes.className='leak-btn lk-yes'+(val===true?' on':'');}
-function svIV(id){var p=P.find(function(x){return x.id===id;});if(!p)return;var d=getDay(p,curDate);var sitesArr=[0,1,2,3].map(function(i){var el=document.getElementById('ivs'+i);return el?el.value:'';});
-  d.iv2.sites=sitesArr;
-  d.iv2.site=sitesArr.filter(function(s){return s;}).join(', ');if(curPh!==null)d.iv2.ph=curPh;if(curLeak!==null)d.iv2.leak=curLeak;curPh=null;curLeak=null;d.ivOk=true;saveData();closeModal();render();}
+function svIV(id){var p=P.find(function(x){return x.id===id;});if(!p)return;var d=getDay(p,curDate);
+  var siteEl=document.getElementById('ivsite');
+  var siteVal=siteEl?siteEl.value.trim():'';
+  d.iv2.site=siteVal;
+  d.iv2.sites=[siteVal,'','',''];
+  if(curPh!==null)d.iv2.ph=curPh;if(curLeak!==null)d.iv2.leak=curLeak;curPh=null;curLeak=null;d.ivOk=true;saveData();closeModal();render();}
 
 // FOLEY
 // FOLEY - new structure
@@ -1485,7 +1488,7 @@ function renderAdmit(){
       var v=String(i+1);
       return'<option value="'+v+'" '+(val===v?'selected':'')+'>'+o+'</option>';
     }).join('');
-    return'<select class="adm-select" title="'+dom.title+'" onchange="setAdmitFieldNoRender('+bed+',\''+dom.k+'\',this.value);renderAdmit();" style="width:100%;font-size:10px;border-radius:5px;padding:2px 4px;white-space:normal;background:'+bg+';color:'+col+';font-weight:'+(val?'600':'400')+';border:1.5px solid '+bdr+';transition:all .15s">'+opts+'</select>';
+    return'<select class="adm-select" title="'+dom.title+'" onchange="setAdmitFieldNoRender('+bed+',\''+dom.k+'\',this.value);renderAdmit();" style="width:100%;font-size:12px;border-radius:5px;padding:3px 5px;white-space:normal;background:'+bg+';color:'+col+';font-weight:'+(val?'600':'400')+';border:1.5px solid '+bdr+';transition:all .15s">'+opts+'</select>';
   }
 
   var rows=FIXED_BEDS.map(function(bed){
@@ -1533,10 +1536,14 @@ function renderAdmit(){
         opts2+='</optgroup>';
       });
       return'<td style="padding:3px 3px;vertical-align:top;min-width:160px">'
-        +'<select class="adm-select" onchange="setIll('+bed+',this.value)" style="width:100%;font-size:10px;border-radius:5px;padding:2px 4px;white-space:normal;background:'+bg2+';color:'+col2+';font-weight:'+(illVal2?'600':'400')+';border:1.5px solid '+bdr2+';margin-bottom:4px;transition:all .15s">'+opts2+'</select>'
+        +'<select class="adm-select" onchange="setIll('+bed+',this.value)" style="width:100%;font-size:12px;border-radius:5px;padding:3px 5px;white-space:normal;background:'+bg2+';color:'+col2+';font-weight:'+(illVal2?'600':'400')+';border:1.5px solid '+bdr2+';margin-bottom:4px;transition:all .15s">'+opts2+'</select>'
         +'</td>';
     }());
-    return'<tr style="'+(allShiftDone?'opacity:.55;':'')+'background:'+(allShiftDone?'#f0fdf4':'')+';transition:background .2s"><td style="text-align:center;white-space:nowrap"><span style="display:inline-block;background:#dbeafe;color:#1d4ed8;font-size:12px;padding:2px 8px;border-radius:8px;font-weight:700;min-width:34px;text-align:center;box-shadow:0 1px 3px rgba(37,99,235,.2)">'+bed+'</span><br><button onclick=\"clearAdmitBed(\'+bed+\')\" style=\"margin-top:2px;font-size:9px;padding:1px 4px;border:1px solid #fca5a5;border-radius:4px;background:#fff;color:#dc2626;cursor:pointer;font-weight:600;width:100%\">&#10005; เคลียร์</button></td>'
+    return'<tr style="'+(allShiftDone?'opacity:.55;':'')+'background:'+(allShiftDone?'#f0fdf4':'')+';transition:background .2s"><td style="text-align:center;white-space:nowrap">'
+      +(bed>=28
+        ?'<span style="display:inline-block;background:#f3e8ff;color:#7c3aed;font-size:11px;padding:2px 8px;border-radius:8px;font-weight:700;min-width:34px;text-align:center;box-shadow:0 1px 3px rgba(124,58,237,.2)">ลอย</span>'
+        :'<span style="display:inline-block;background:#dbeafe;color:#1d4ed8;font-size:12px;padding:2px 8px;border-radius:8px;font-weight:700;min-width:34px;text-align:center;box-shadow:0 1px 3px rgba(37,99,235,.2)">'+bed+'</span>')
+      +'<br><button onclick=\"clearAdmitBed(\''+bed+'\')\" style=\"margin-top:2px;font-size:9px;padding:1px 4px;border:1px solid #fca5a5;border-radius:4px;background:#fff;color:#dc2626;cursor:pointer;font-weight:600;width:100%\">&#10005; เคลียร์</button></td>'
       +'<td style="padding:5px 6px"><input class="adm-input" value="'+escHtml(d.name)+'" placeholder="ชื่อ..." onchange="setAdmitFieldNoRender('+bed+',\'name\',this.value)" style="width:175px;font-size:14px;margin-bottom:3px"><br>'
       +'<input class="adm-input" list="dx-list" value="'+escHtml(d.dx)+'" placeholder="DX..." oninput="updateDxList(this.value)" onchange="setAdmitFieldNoRender('+bed+',\'dx\',this.value)" style="width:175px;font-size:13px;color:#374151"></td>'
       +illSel
@@ -1555,7 +1562,7 @@ function renderAdmit(){
   }).filter(Boolean).join('');
 
   var AIIR_BEDS=[1,2,3,4];
-  var typeCountsAll={},typeCountsAIIR={},typeCountsGen={};
+  var typeCountsAll={},typeCountsAIIR={},typeCountsGen={},typeCountsFloat={};
   FIXED_BEDS.forEach(function(bed){
     var d=getAdmit(bed,admitDate);
     var illVal=d.ill&&d.ill.length?d.ill[0]:'';
@@ -1564,7 +1571,8 @@ function renderAdmit(){
     var tFull=tNum&&gr.grade?(tNum+gr.grade.toUpperCase()):'';
     if(tFull){
       typeCountsAll[tFull]=(typeCountsAll[tFull]||0)+1;
-      if(AIIR_BEDS.indexOf(bed)>=0)typeCountsAIIR[tFull]=(typeCountsAIIR[tFull]||0)+1;
+      if(bed>=28)typeCountsFloat[tFull]=(typeCountsFloat[tFull]||0)+1;
+      else if(AIIR_BEDS.indexOf(bed)>=0)typeCountsAIIR[tFull]=(typeCountsAIIR[tFull]||0)+1;
       else typeCountsGen[tFull]=(typeCountsGen[tFull]||0)+1;
     }
   });
@@ -1612,22 +1620,79 @@ function renderAdmit(){
     +'<div style="background:#fff;border:0.5px solid #e2e4e9;border-radius:8px;padding:10px 14px;margin-top:6px;width:100%">'
     +'<div style="display:flex;gap:0;flex-wrap:wrap">'
     +'<div style="flex:1;min-width:160px;padding-right:12px;border-right:0.5px solid #eee">'
-    +'<div style="font-size:10px;font-weight:600;color:#555;margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px">รวมทั้งหอผู้ป่วย (1-27)</div>'
+    +'<div style="font-size:10px;font-weight:600;color:#555;margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px">รวมทั้งหอผู้ป่วย</div>'
     +'<div style="display:flex;gap:3px;flex-wrap:wrap;min-height:22px">'+(allBadges||'<span style="font-size:11px;color:#b8bec8">—</span>')+'</div>'
     +'</div>'
     +'<div style="flex:1;min-width:130px;padding:0 12px;border-right:0.5px solid #eee">'
     +'<div style="font-size:10px;font-weight:600;color:#555;margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px">ห้อง AIIR (เตียง 1-4)</div>'
     +'<div style="display:flex;gap:3px;flex-wrap:wrap;min-height:22px">'+(aiirBadges||'<span style="font-size:11px;color:#b8bec8">—</span>')+'</div>'
     +'</div>'
-    +'<div style="flex:1;min-width:160px;padding-left:12px">'
+    +'<div style="flex:1;min-width:160px;padding:0 12px;border-right:0.5px solid #eee">'
     +'<div style="font-size:10px;font-weight:600;color:#555;margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px">ห้องสามัญ (เตียง 6-27)</div>'
     +'<div style="display:flex;gap:3px;flex-wrap:wrap;min-height:22px">'+(genBadges||'<span style="font-size:11px;color:#b8bec8">—</span>')+'</div>'
+    +'</div>'
+    +'<div style="flex:1;min-width:120px;padding-left:12px">'
+    +'<div style="font-size:10px;font-weight:600;color:#7c3aed;margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px">&#127984; เตียงลอย</div>'
+    +'<div style="display:flex;gap:3px;flex-wrap:wrap;min-height:22px">'+(makeBadges(typeCountsFloat)||'<span style="font-size:11px;color:#b8bec8">—</span>')+'</div>'
     +'</div>'
     +'</div>'
     +'</div>'
     +'<div style="font-size:12px;color:#8a92a0">'
     +'เวร'+SHIFT_LABELS[admitShift]+': <strong style="color:#185FA5">'+shiftDone+'</strong> / '+FIXED_BEDS.length+' เตียง'
     +' &nbsp;|&nbsp; ครบ 3 เวร: <strong style="color:#3B6D11">'+allDone+'</strong> / '+FIXED_BEDS.length+'</div>'
+    +(function(){
+      // คำนวณ HPPD = (A×6.5 + B×4.5 + C×3.5 + D×1.5) ÷ จำนวนผู้ป่วยทั้งหมด
+      var cntA=0,cntB=0,cntC=0,cntD=0,total=0;
+      FIXED_BEDS.forEach(function(bed){
+        var d=getAdmit(bed,admitDate);
+        var gr=calcGrade(d);
+        if(!gr.grade)return;
+        total++;
+        if(gr.grade==='a')cntA++;
+        else if(gr.grade==='b')cntB++;
+        else if(gr.grade==='c')cntC++;
+        else if(gr.grade==='d')cntD++;
+      });
+      if(!total)return'';
+      var hppd=((cntA*6.5)+(cntB*4.5)+(cntC*3.5)+(cntD*1.5))/total;
+      var hppdColor=hppd>=6?'#dc2626':hppd>=4?'#d97706':'#16a34a';
+      // คำนวณ Productivity = ((HPPD × จำนวนคนไข้) / (จำนวนพยาบาล × 7) × 100) / 3
+      var assignData=getAssign(admitDate);
+      var nurseCount=(assignData[admitShift]&&assignData[admitShift].nurses)?assignData[admitShift].nurses.filter(function(n){return n.name&&n.name.trim();}).length:0;
+      var productivity=nurseCount>0?(((hppd*total)/(nurseCount*7)*100)/3):0;
+      var prodColor=productivity>=80?'#16a34a':productivity>=60?'#d97706':'#dc2626';
+      return'<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">'
+        // HPPD card
+        +'<div style="flex:1;min-width:220px;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">'
+        +'<div style="display:flex;align-items:baseline;gap:6px">'
+        +'<span style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px">HPPD</span>'
+        +'<span style="font-size:28px;font-weight:900;color:'+hppdColor+'">'+hppd.toFixed(2)+'</span>'
+        +'<span style="font-size:11px;color:#94a3b8">ชม./คน</span>'
+        +'</div>'
+        +'<div style="font-size:11px;color:#64748b;line-height:1.8">'
+        +(cntA?'<span style="background:#fee2e2;color:#dc2626;padding:1px 6px;border-radius:5px;font-weight:600;margin-right:3px">A:'+cntA+'×6.5</span>':'')
+        +(cntB?'<span style="background:#fff7ed;color:#ea580c;padding:1px 6px;border-radius:5px;font-weight:600;margin-right:3px">B:'+cntB+'×4.5</span>':'')
+        +(cntC?'<span style="background:#eff6ff;color:#2563eb;padding:1px 6px;border-radius:5px;font-weight:600;margin-right:3px">C:'+cntC+'×3.5</span>':'')
+        +(cntD?'<span style="background:#f0fdf4;color:#16a34a;padding:1px 6px;border-radius:5px;font-weight:600;margin-right:3px">D:'+cntD+'×1.5</span>':'')
+        +'<span style="color:#94a3b8">÷ '+total+'</span>'
+        +'</div>'
+        +'</div>'
+        // Productivity card
+        +'<div style="flex:1;min-width:220px;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">'
+        +'<div style="display:flex;align-items:baseline;gap:6px">'
+        +'<span style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px">Productivity</span>'
+        +(nurseCount>0
+          ?'<span style="font-size:28px;font-weight:900;color:'+prodColor+'">'+productivity.toFixed(1)+'</span><span style="font-size:11px;color:#94a3b8">%</span>'
+          :'<span style="font-size:13px;color:#94a3b8">ยังไม่ได้ Assign พยาบาล</span>')
+        +'</div>'
+        +(nurseCount>0
+          ?'<div style="font-size:11px;color:#64748b">'
+          +'<span style="color:#94a3b8">HPPD('+hppd.toFixed(2)+') × '+total+' คน</span><br>'
+          +'<span style="color:#94a3b8">÷ ('+nurseCount+' พยาบาล × 7) × 100 ÷ 3</span>'
+          +'</div>':'')
+        +'</div>'
+        +'</div>';
+    }())
     +'</div></div>'
     +'<div style="overflow-x:auto">'
     +'<table class="admit-table"><thead>'
@@ -1702,7 +1767,7 @@ function renderAssign(){
     var nameId='an-'+role+'-'+pidx;
     return'<tr style="border-bottom:1px solid #f1f5f9">'
       +'<td style="padding:8px 10px;width:30px;text-align:center"><span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:'+color+';color:#fff;border-radius:50%;font-size:11px;font-weight:700">'+(pidx+1)+'</span></td>'
-      +'<td style="padding:8px 6px;width:130px"><input class="adm-input" id="'+nameId+'" value="'+escHtml(person.name||'')+'" placeholder="ชื่อ..." data-role="'+role+'" data-pidx="'+pidx+'" onchange="onAssignNameChange(this)" style="width:100%;font-size:12px"></td>'
+      +'<td style="padding:8px 6px;width:130px"><input class="adm-input" id="'+nameId+'" value="'+escHtml(person.name||'')+'" placeholder="ชื่อ..." data-role="'+role+'" data-pidx="'+pidx+'" onchange="onAssignNameChange(this)" style="width:100%;font-size:14px"></td>'
       +'<td style="padding:8px 6px">'+bedInputCell(person,pidx,role)+'</td>'
       +'<td style="padding:8px 6px;text-align:center;width:80px"><span style="font-size:11px;font-weight:700;color:'+color+';background:'+bgColor+';padding:2px 8px;border-radius:6px">'+person.beds.length+' เตียง</span></td>'
       +'</tr>';
@@ -1720,7 +1785,7 @@ function renderAssign(){
       var v=String(i+1);
       return'<option value="'+v+'" '+(val===v?'selected':'')+'>'+o+'</option>';
     }).join('');
-    return'<select class="adm-select" title="'+dom.title+'" onchange="setAdmitFieldNoRender('+bed+',\''+dom.k+'\',this.value);renderAdmit();" style="width:100%;font-size:10px;border-radius:5px;padding:2px 4px;white-space:normal;background:'+bg+';color:'+col+';font-weight:'+(val?'600':'400')+';border:1.5px solid '+bdr+';transition:all .15s">'+opts+'</select>';
+    return'<select class="adm-select" title="'+dom.title+'" onchange="setAdmitFieldNoRender('+bed+',\''+dom.k+'\',this.value);renderAdmit();" style="width:100%;font-size:12px;border-radius:5px;padding:3px 5px;white-space:normal;background:'+bg+';color:'+col+';font-weight:'+(val?'600':'400')+';border:1.5px solid '+bdr+';transition:all .15s">'+opts+'</select>';
   }
 
   var rows=FIXED_BEDS.map(function(bed){
@@ -1765,7 +1830,7 @@ function renderAssign(){
           opts+='</optgroup>';
         });
         return '<td style="padding:3px 3px;vertical-align:top;min-width:160px">'
-          +'<select class="adm-select" onchange="setIll('+bed+',this.value)" style="width:100%;font-size:10px;border-radius:5px;padding:2px 4px;white-space:normal;background:'+bg+';color:'+col+';font-weight:'+(illVal?'600':'400')+';border:1.5px solid '+bdr+';margin-bottom:4px;transition:all .15s">'+opts+'</select>'
+          +'<select class="adm-select" onchange="setIll('+bed+',this.value)" style="width:100%;font-size:12px;border-radius:5px;padding:3px 5px;white-space:normal;background:'+bg+';color:'+col+';font-weight:'+(illVal?'600':'400')+';border:1.5px solid '+bdr+';margin-bottom:4px;transition:all .15s">'+opts+'</select>'
           +'<input class="adm-input" value="'+escHtml(d.note||'')+'" placeholder="หมายเหตุ..." onchange="setAdmitFieldNoRender('+bed+',\'note\',this.value)" style="width:100%;font-size:10px">'
           +'</td>';
       }())
@@ -1786,7 +1851,7 @@ function renderAssign(){
 
   // Detailed type summary (e.g. 3A:2, 3B:1 ...)
   var AIIR_BEDS=[1,2,3,4];
-  var typeCountsAll={},typeCountsAIIR={},typeCountsGen={};
+  var typeCountsAll={},typeCountsAIIR={},typeCountsGen={},typeCountsFloat={};
   FIXED_BEDS.forEach(function(bed){
     var d=getAdmit(bed,admitDate);
     var illVal=d.ill&&d.ill.length?d.ill[0]:'';
@@ -1795,7 +1860,8 @@ function renderAssign(){
     var tFull=tNum&&gr.grade?(tNum+gr.grade.toUpperCase()):'';
     if(tFull){
       typeCountsAll[tFull]=(typeCountsAll[tFull]||0)+1;
-      if(AIIR_BEDS.indexOf(bed)>=0)typeCountsAIIR[tFull]=(typeCountsAIIR[tFull]||0)+1;
+      if(bed>=28)typeCountsFloat[tFull]=(typeCountsFloat[tFull]||0)+1;
+      else if(AIIR_BEDS.indexOf(bed)>=0)typeCountsAIIR[tFull]=(typeCountsAIIR[tFull]||0)+1;
       else typeCountsGen[tFull]=(typeCountsGen[tFull]||0)+1;
     }
   });
@@ -2024,7 +2090,11 @@ function updateNurseList(val){
   dl.innerHTML=matches.map(function(n){return'<option value="'+escHtml(n)+'"></option>';}).join('');
 }
 function bedsToText(beds){
-  return(beds||[]).slice().sort(function(a,b){return a-b;}).join(', ');
+  return(beds||[]).slice().sort(function(a,b){
+    var an=String(a).startsWith('F')?1000+parseInt(String(a).slice(1)):Number(a);
+    var bn=String(b).startsWith('F')?1000+parseInt(String(b).slice(1)):Number(b);
+    return an-bn;
+  }).join(', ');
 }
 function textToBeds(txt){
   if(!txt)return[];
@@ -2033,9 +2103,13 @@ function textToBeds(txt){
     part=part.trim();if(!part)return;
     var range=part.match(/^(\d+)\s*-\s*(\d+)$/);
     if(range){for(var i=parseInt(range[1]);i<=parseInt(range[2]);i++)if(FIXED_BEDS.indexOf(i)>=0)beds.push(i);}
-    else{var n=parseInt(part);if(!isNaN(n)&&FIXED_BEDS.indexOf(n)>=0)beds.push(n);}
+    else{
+      // รองรับ F1-F5
+      if(/^F\d+$/i.test(part)){var fb=part.toUpperCase();if(FIXED_BEDS.indexOf(fb)>=0)beds.push(fb);}
+      else{var n=parseInt(part);if(!isNaN(n)&&FIXED_BEDS.indexOf(n)>=0)beds.push(n);}
+    }
   });
-  return beds.filter(function(v,i,a){return a.indexOf(v)===i;}).sort(function(a,b){return a-b;});
+  return beds.filter(function(v,i,a){return a.indexOf(v)===i;});
 }
 function bedInputCell(person,pidx,role){
   var val=bedsToText(person.beds||[]);
@@ -2333,6 +2407,7 @@ function doExportAssignCSV(){
         .concat(sd.aides.map(function(a){return{name:a.name,beds:a.beds,role:'ผู้ช่วยเหลือ'};}));
       allPersons.forEach(function(person){
         if(!person.name||!person.beds.length)return;
+        if(nurseFilter&&person.name.trim()!==nurseFilter)return;
         var types={};
         person.beds.forEach(function(bed){
           var ad=getAdmit(bed,dt);
@@ -2553,7 +2628,7 @@ function renderRegistry(){
     +'<select id="reg-month" class="adm-select" style="font-size:13px;padding:6px 10px" onchange="onRegMonthChange(this.value)">'+ymOpts+'</select>'
     
     +'<button class="btn btn-sm" onclick="prefillFromAdmit()" style="font-size:12px;color:#2563eb;border-color:#93c5fd;background:#eff6ff">&#8593; ดึงข้อมูล</button>'
-    +'<button class="btn btn-blue btn-sm" onclick="exportRegistryCSV()" style="font-size:12px">&#11015; Export CSV</button>'
+    +'<button class="btn btn-blue btn-sm" onclick="openRegistryExport()" style="font-size:12px">&#11015; Export CSV</button>'
     +'</div></div>'
     // --- Stats summary ---
     +(function(){
@@ -2766,25 +2841,7 @@ function prefillFromAdmit(){
   renderRegistry();
   if(added>0)alert('เพิ่มข้อมูล '+added+' ราย');else alert('ไม่มีข้อมูลใหม่ (มีอยู่แล้ว)');
 }
-function exportRegistryCSV(){
-  var ym=getCurRegYM();
-  var data=getRegistry(ym);
-  var rows=data.rows||[];
-  var bom=String.fromCharCode(65279);
-  var header=['ลำดับ','คำนำหน้า','ชื่อ','สกุล','อายุ','HN','AN','โรค','แพทย์','Resident','พยาบาล','สิทธิ์รักษา','วันรับ','เวลารับ','รับใหม่/รับย้าย','หมายเหตุรับ','พยาบาลจำหน่าย','วันจำหน่าย','เวลาจำหน่าย','ประเภทจำหน่าย','หมายเหตุจำหน่าย','รวมวัน'].join(',');
-  var lines=[header];
-  rows.forEach(function(r,i){
-    var los=(r.admit_date&&r.disch_date?Math.max(0,Math.round((new Date(r.disch_date)-new Date(r.admit_date))/86400000)):'');
-    lines.push([i+1,r.prefix||'','"'+r.name+'"','"'+r.surname+'"',r.age,r.hn,r.an,'"'+r.dx+'"','"'+r.doctor+'"','"'+r.resident+'"','"'+r.nurse+'"',r.rights,r.admit_date||'',r.admit_time||'',r.admit_type||'','"'+(r.admit_note||'')+'"','"'+(r.disch_nurse||'')+'"',r.disch_date||'',r.disch_time||'',r.disch_type||'','"'+(r.disch_note||'')+'"',los].join(','));
-  });
-  var csv=bom+lines.join('\n');
-  var months={'01':'ม.ค.','02':'ก.พ.','03':'มี.ค.','04':'เม.ย.','05':'พ.ค.','06':'มิ.ย.','07':'ก.ค.','08':'ส.ค.','09':'ก.ย.','10':'ต.ค.','11':'พ.ย.','12':'ธ.ค.'};
-  var y=parseInt(ym.split('-')[0])+543;var m=months[ym.split('-')[1]]||ym.split('-')[1];
-  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');a.href=url;a.download='registry_'+m+y+'.csv';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-}
+function exportRegistryCSV(){ openRegistryExport(); }
 
 
 function renderRegistryMonth(ym){
@@ -2796,59 +2853,86 @@ function renderRegistryMonth(ym){
 
 var curRegYM='';
 
-function exportRegistryCSV(){
-  var sel=document.getElementById('reg-month');
-  var ym=sel?sel.value:(admitDate?admitDate.substring(0,7):todayISO().substring(0,7));
+function openRegistryExport(){
   var months={'01':'มกราคม','02':'กุมภาพันธ์','03':'มีนาคม','04':'เมษายน','05':'พฤษภาคม','06':'มิถุนายน','07':'กรกฎาคม','08':'สิงหาคม','09':'กันยายน','10':'ตุลาคม','11':'พฤศจิกายน','12':'ธันวาคม'};
+  var curYM=getCurRegYM();
+  var curY=curYM.split('-')[0];
+  // collect available months/years from registry keys
+  var allYMs={},allYs={};
+  for(var i=0;i<_DB.length;i++){var k=_DB.key(i);if(k&&k.startsWith('registry_')){var ym2=k.replace('registry_','');if(ym2.length===7){allYMs[ym2]=1;allYs[ym2.split('-')[0]]=1;}}}
+  allYMs[curYM]=1;allYs[curY]=1;
+  var ymOpts2=Object.keys(allYMs).sort().reverse().map(function(ym){
+    var y=parseInt(ym.split('-')[0])+543;var m=months[ym.split('-')[1]]||ym.split('-')[1];
+    return'<option value="'+ym+'" '+(ym===curYM?'selected':'')+'>'+m+' '+y+'</option>';
+  }).join('');
+  var yOpts=Object.keys(allYs).sort().reverse().map(function(y){
+    return'<option value="'+y+'" '+(y===curY?'selected':'')+'>พ.ศ. '+(parseInt(y)+543)+'</option>';
+  }).join('');
+  showModal(
+    '<h3>&#11015; Export ทะเบียนผู้ป่วย</h3>'
+    +'<div class="msub">เลือกรูปแบบที่ต้องการ Export</div>'
+    +'<div class="exp-section"><h4>รูปแบบ</h4>'
+    +'<div class="exp-row">'
+    +'<div style="flex:1"><div class="er-lbl">&#128197; รายเดือน</div>'
+    +'<select id="reg-exp-month" class="adm-select" style="margin-top:5px;width:100%;font-size:12px;padding:5px 8px">'+ymOpts2+'</select></div>'
+    +'<button class="btn btn-blue btn-sm" onclick="doRegistryExportMonth()" style="margin-top:18px">ดาวน์โหลด</button>'
+    +'</div>'
+    +'<div class="exp-row">'
+    +'<div style="flex:1"><div class="er-lbl">&#128197; รายปี</div>'
+    +'<select id="reg-exp-year" class="adm-select" style="margin-top:5px;width:100%;font-size:12px;padding:5px 8px">'+yOpts+'</select></div>'
+    +'<button class="btn btn-blue btn-sm" onclick="doRegistryExportYear()" style="margin-top:18px">ดาวน์โหลด</button>'
+    +'</div></div>'
+    +'<div class="mft"><button class="btn" onclick="closeModal()">ปิด</button></div>'
+  );
+}
 
-  var byMonth={};
-  for(var i=0;i<_DB.length;i++){
-    var k=_DB.key(i);
-    if(!k||!k.startsWith('admit_'))continue;
-    var parts=k.split('_');if(parts.length<3)continue;
-    var bed=parseInt(parts[1]),date=parts[2],dym=date.substring(0,7);
-    if(dym!==ym)continue;
-    try{
-      var d=JSON.parse(_DB.getItem(k));
-      if(!d||(!d.name&&!d.dx&&!d.type))continue;
-      if(!byMonth[bed])byMonth[bed]={bed:bed,name:'',dx:'',type:'',ill:[],firstDate:date,lastDate:date,cre:false,crab:false};
-      var r=byMonth[bed];
-      if(date<r.firstDate)r.firstDate=date;
-      if(date>r.lastDate)r.lastDate=date;
-      if(d.name)r.name=d.name;
-      if(d.dx)r.dx=d.dx;
-      if(d.type)r.type=d.type;
-      if(d.ill&&d.ill.length)r.ill=d.ill;
-    }catch(e){}
-  }
-  P.forEach(function(p){
-    Object.keys(p.days).forEach(function(date){
-      if(date.substring(0,7)!==ym)return;
-      var d=p.days[date];
-      if(byMonth[p.bed]){if(d.cre)byMonth[p.bed].cre=true;if(d.crab)byMonth[p.bed].crab=true;}
+function buildRegistryCSV(yms){
+  var bom=String.fromCharCode(65279);
+  var header=['ลำดับ','คำนำหน้า','ชื่อ','สกุล','อายุ','HN','AN','โรค','แพทย์','Resident','พยาบาล','สิทธิ์รักษา','วันรับ','เวลารับ','รับใหม่/รับย้าย','หมายเหตุรับ','พยาบาลจำหน่าย','วันจำหน่าย','เวลาจำหน่าย','ประเภทจำหน่าย','หมายเหตุจำหน่าย','รวมวัน'].join(',');
+  var lines=[header];
+  var seq=0;
+  yms.forEach(function(ym){
+    var data=getRegistry(ym);
+    var rows=data.rows||[];
+    rows.forEach(function(r){
+      seq++;
+      var los=(r.admit_date&&r.disch_date?Math.max(0,Math.round((new Date(r.disch_date)-new Date(r.admit_date))/86400000)):'');
+      lines.push([seq,r.prefix||'','"'+(r.name||'')+'"','"'+(r.surname||'')+'"',r.age||'',r.hn||'',r.an||'','"'+(r.dx||'')+'"','"'+(r.doctor||'')+'"','"'+(r.resident||'')+'"','"'+(r.nurse||'')+'"',r.rights||'',r.admit_date||'',r.admit_time||'',r.admit_type||'','"'+(r.admit_note||'')+'"','"'+(r.disch_nurse||'')+'"',r.disch_date||'',r.disch_time||'',r.disch_type||'','"'+(r.disch_note||'')+'"',los].join(','));
     });
   });
+  return bom+lines.join('\n');
+}
 
-  var records=Object.values(byMonth).sort(function(a,b){return a.bed-b.bed;});
-  var bom=String.fromCharCode(65279);
-  var rows=[['ลำดับ','เตียง','ชื่อ-สกุล','การวินิจฉัย','วันแรก','วันล่าสุด','ประเภทผู้ป่วย','CRE','CRAB'].join(',')];
-  records.forEach(function(r,idx){
-    var illVal=r.ill&&r.ill.length?r.ill[0]:'';
-    var tNum=illVal?illVal.charAt(0):(r.type||'');
-    var latestKey='admit_'+r.bed+'_'+r.lastDate;
-    var typeFull=tNum;
-    try{var ld=JSON.parse(_DB.getItem(latestKey)||'{}');var gr=calcGrade(ld);if(gr.grade)typeFull=tNum+gr.grade.toUpperCase();}catch(e){}
-    rows.push([idx+1,r.bed,'"'+r.name+'"','"'+r.dx+'"',thaiDate(r.firstDate),thaiDate(r.lastDate),typeFull,r.cre?'ใช่':'',r.crab?'ใช่':''].join(','));
-  });
-
-  var y=parseInt(ym.split('-')[0])+543;
-  var m=months[ym.split('-')[1]]||ym.split('-')[1];
-  var csv=bom+rows.join('\n');
+function doRegistryExportMonth(){
+  var ym=document.getElementById('reg-exp-month').value;
+  if(!ym){alert('กรุณาเลือกเดือน');return;}
+  var months={'01':'ม.ค.','02':'ก.พ.','03':'มี.ค.','04':'เม.ย.','05':'พ.ค.','06':'มิ.ย.','07':'ก.ค.','08':'ส.ค.','09':'ก.ย.','10':'ต.ค.','11':'พ.ย.','12':'ธ.ค.'};
+  var y=parseInt(ym.split('-')[0])+543;var m=months[ym.split('-')[1]]||ym.split('-')[1];
+  var csv=buildRegistryCSV([ym]);
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');a.href=url;a.download='registry_'+m+y+'.csv';
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  closeModal();
 }
+
+function doRegistryExportYear(){
+  var y=document.getElementById('reg-exp-year').value;
+  if(!y){alert('กรุณาเลือกปี');return;}
+  // collect all months in this year
+  var yms=[];
+  for(var i=0;i<_DB.length;i++){var k=_DB.key(i);if(k&&k.startsWith('registry_')){var ym=k.replace('registry_','');if(ym.startsWith(y))yms.push(ym);}}
+  if(!yms.length){alert('ไม่มีข้อมูลในปีที่เลือก');return;}
+  yms.sort();
+  var csv=buildRegistryCSV(yms);
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download='registry_'+(parseInt(y)+543)+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  closeModal();
+}
+
+function exportRegistryCSV(){ openRegistryExport(); }
 
 function calcLOS(ri){
   var ym=getCurRegYM();
