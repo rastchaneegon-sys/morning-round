@@ -191,84 +191,6 @@ tbody td{padding:6px 8px;vertical-align:middle}
 .ci-yes{background:#dcfce7;color:#15803d;border-color:#86efac}.ci-yes:hover{background:#bbf7d0}.ci-yes.on{background:#16a34a;color:#fff;border-color:#16a34a}
 .ci-no{background:#fee2e2;color:#dc2626;border-color:#fca5a5}.ci-no:hover{background:#fecaca}.ci-no.on{background:#dc2626;color:#fff;border-color:#dc2626}
 </style>
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, onSnapshot, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCp4MCy20AttZQCl6Von_wjXjVOdR_XTc8",
-      authDomain: "round-3d16d.firebaseapp.com",
-      projectId: "round-3d16d",
-      storageBucket: "round-3d16d.firebasestorage.app",
-      messagingSenderId: "618918009933",
-      appId: "1:618918009933:web:3d23dc54787d85b9005004"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // ---- Cloud Storage wrapper (replaces localStorage) ----
-    window.cloudDB = {
-      async get(key) {
-        try {
-          const snap = await getDoc(doc(db, 'ward', key));
-          return snap.exists() ? snap.data().value : null;
-        } catch(e) { return localStorage.getItem(key); }
-      },
-      async set(key, value) {
-        try {
-          await setDoc(doc(db, 'ward', key), { value, updatedAt: Date.now() });
-          localStorage.setItem(key, value); // local cache
-        } catch(e) { localStorage.setItem(key, value); }
-      },
-      async remove(key) {
-        try {
-          await deleteDoc(doc(db, 'ward', key));
-          localStorage.removeItem(key);
-        } catch(e) { localStorage.removeItem(key); }
-      },
-      async keys() {
-        try {
-          const snap = await getDocs(collection(db, 'ward'));
-          return snap.docs.map(d => d.id);
-        } catch(e) {
-          return Object.keys(localStorage);
-        }
-      }
-    };
-
-    // ---- Sync: listen for real-time changes ----
-    onSnapshot(collection(db, 'ward'), (snap) => {
-      snap.docChanges().forEach(change => {
-        if (change.type === 'added' || change.type === 'modified') {
-          const key = change.doc.id;
-          const val = change.doc.data().value;
-          if (val !== localStorage.getItem(key)) {
-            localStorage.setItem(key, val);
-          }
-        }
-        if (change.type === 'removed') {
-          localStorage.removeItem(change.doc.id);
-        }
-      });
-      // Re-render current page after sync
-      if (typeof renderDash === 'function') {
-        try { renderDash(); } catch(e) {}
-      }
-    });
-
-    // ---- Override save functions to use cloud ----
-    window.cloudSave = async function(key, value) {
-      localStorage.setItem(key, value);
-      try {
-        await setDoc(doc(db, 'ward', key), { value, updatedAt: Date.now() });
-      } catch(e) { console.warn('Cloud save failed:', e); }
-    };
-
-    window.cloudReady = true;
-    console.log('Firebase connected ✓');
-  </script>
 </head>
 <body>
 <div class="app" id="app">
@@ -282,7 +204,6 @@ tbody td{padding:6px 8px;vertical-align:middle}
   <div id="dash-content"></div>
 </div>
 <div id="page-admit" class="page-section">
-  <div id="mc-admit"></div>
   <div class="datebar" style="margin-bottom:.75rem">
     <label>วันที่:</label>
     <input type="date" id="admitDate" onchange="onAdmitDateChange()">
@@ -379,14 +300,14 @@ function getNameFromAdmit(bed,date){
   // ดึงชื่อจากหน้าแยกประเภทเวรดึกของวันนั้น (หรือวันก่อนหน้าล่าสุด)
   try{
     var key='admit_'+bed+'_'+date;
-    var s=localStorage.getItem(key);
+    var s=_DB.getItem(key);
     if(s){var d=JSON.parse(s);if(d.name)return d.name;}
     // ถ้าไม่มีวันนั้น ลองวันก่อนหน้า
     var allKeys=[];
-    for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.startsWith('admit_'+bed+'_'))allKeys.push(k);}
+    for(var i=0;i<_DB.length;i++){var k=_DB.key(i);if(k&&k.startsWith('admit_'+bed+'_'))allKeys.push(k);}
     var past=allKeys.map(function(k){return k.replace('admit_'+bed+'_','');}).filter(function(d2){return d2<=date;}).sort();
     if(past.length){
-      var ps=localStorage.getItem('admit_'+bed+'_'+past[past.length-1]);
+      var ps=_DB.getItem('admit_'+bed+'_'+past[past.length-1]);
       if(ps){var pd=JSON.parse(ps);if(pd.name)return pd.name;}
     }
   }catch(e){}
@@ -406,7 +327,7 @@ function getDay(p,date){
       d.iv2.site=prev.iv2.site||'';
       d.iv2.sites=prev.iv2.sites&&prev.iv2.sites.length===4?prev.iv2.sites:[prev.iv2.site||'','','',''];
       d.iv2.insertDate=prev.iv2.insertDate||'';
-      d.iv2.changeDate=prev.iv2.changeDate||'';
+      d.iv2.changeDate=prev.iv2.insertDate?addDays(prev.iv2.insertDate,4):'';
       d.iv2.days=prev.iv2.insertDate?String(Math.max(0,Math.floor((new Date(date+'T00:00:00')-new Date(prev.iv2.insertDate+'T00:00:00'))/86400000))):'';
       d.iv2.ph='-1';   // รีเซ็ต Phlebitis Grade
       d.iv2.leak=null; // รีเซ็ต IV ติด/ไม่ติด
@@ -434,18 +355,27 @@ function getDay(p,date){
 
 function loadData(){
   try{
-    var s=localStorage.getItem('mr_v11');
+    var s=_DB.getItem('mr_v11');
     if(s){
       var saved=JSON.parse(s);
       return FIXED_BEDS.map(function(bed){
         var f=saved.find(function(p){return p.bed===bed;});
+        if(f){
+          // recalculate iv2.changeDate = insertDate+4 for all days
+          Object.keys(f.days||{}).forEach(function(date){
+            var day=f.days[date];
+            if(day&&day.iv2&&day.iv2.insertDate){
+              day.iv2.changeDate=addDays(day.iv2.insertDate,4);
+            }
+          });
+        }
         return f||{id:bed,bed:bed,name:'',iv:true,foley:DEFAULT_FOLEY.indexOf(bed)>=0,cre:false,crab:false,days:{}};
       });
     }
   }catch(e){}
   return FIXED_BEDS.map(function(bed){return{id:bed,bed:bed,name:'',iv:true,foley:DEFAULT_FOLEY.indexOf(bed)>=0,cre:false,crab:false,days:{}};});
 }
-function saveData(){try{localStorage.setItem('mr_v11',JSON.stringify(P));}catch(e){}}
+function saveData(){try{_DB.setItem('mr_v11',JSON.stringify(P));}catch(e){}}
 
 var P=loadData();
 var curPh=null,curU=null,curLeak=null,curWB=null;
@@ -666,36 +596,21 @@ function clrF(id){var p=P.find(function(x){return x.id===id;});if(p){var d=getDa
 
 // IV
 var IVS=['หลังมือ L','หลังมือ R','ข้อพับแขน L','ข้อพับแขน R','ข้อมือ L','ข้อมือ R','ปลายแขน L','ปลายแขน R','PICC','Central line'];
-var PHD=[
-  {g:0,l:'Grade 0',s:'p0',desc:'No symptoms — ไม่มีอาการ'},
-  {g:1,l:'Grade 1',s:'p1',desc:'Erythema at access site with or without pain — แดงรอบรอยเข็ม มีอาการปวดหรือไม่ก็ได้'},
-  {g:2,l:'Grade 2',s:'p2',desc:'Pain at access site with erythema and/or edema — ปวดและแดงรอบรอยเข็ม บวมหรือไม่บวมก็ได้'},
-  {g:3,l:'Grade 3',s:'p3',desc:'Pain at access site with erythema, Streak formation, Palpable venous cord — ปวดรอบรอยเข็มร่วมกับแดง มีรอยแดงเป็นทาง คลำได้หลอดเลือดแข็ง'},
-  {g:4,l:'Grade 4',s:'p4',desc:'Pain at access site with erythema, Streak formation, Palpable venous cord >1 inch, Purulent discharge — ปวด แดง มีรอยแดงเป็นทางยาว คลำได้หลอดเลือดแข็ง มีหนอง'}
-];
+var PHD=[{g:0,l:'Grade 0 — ปกติ',s:'p0'},{g:1,l:'Grade 1 — แดง/เจ็บ',s:'p1'},{g:2,l:'Grade 2 — บวมแดง/เส้นแข็ง',s:'p2'},{g:3,l:'Grade 3 — เส้นชัด/บวม',s:'p3'},{g:4,l:'Grade 4 — เป็นหนอง/ลิ่มเลือด',s:'p4'}];
 function cdInfo(cd){if(!cd)return'';var diff=daysDiff(curDate,cd);if(diff<0)return'<div class="change-info ci-over">🔴 เลยกำหนดเปลี่ยน '+Math.abs(diff)+' วันแล้ว (ครบเมื่อ '+thaiDate(cd)+')</div>';if(diff===0)return'<div class="change-info ci-today">🟡 ครบกำหนดเปลี่ยนวันนี้</div>';if(diff<=1)return'<div class="change-info ci-today">🟡 ใกล้ครบกำหนด เหลืออีก '+diff+' วัน ('+thaiDate(cd)+')</div>';return'<div class="change-info ci-ok">🟢 ครบกำหนดเปลี่ยน: '+thaiDate(cd)+' (อีก '+diff+' วัน)</div>';}
 function openIV(id){
   var p=P.find(function(x){return x.id===id;});if(!p)return;var _chk=getDay(p,curDate);if(!_chk.iv)return;
   var d=getDay(p,curDate),iv=d.iv2;curPh=iv.ph;curLeak=iv.leak;
-  var cd=iv.changeDate||(iv.insertDate?addDays(iv.insertDate,4):'');
-  showModal('<h3>ตรวจ IV Line</h3><div class="msub">เตียง '+p.bed+' | <strong>'+thaiDate(curDate)+'</strong></div><div class="section-lbl">ข้อมูลสาย Iตำแหน่งแทง (Site) — สูงสุด 4 ตำแหน่ง</label>'+(function(){var _sites=iv.sites&&iv.sites.length===4?iv.sites:(iv.site?[iv.site,'','','']:['','','','']);return _sites.map(function(sv,i){var _opts='<option value=\"\">'+(i+1)+'. -- เลือก --</option>'+IVS.map(function(s){return'<option value=\"'+s+'\" '+(sv===s?'selected':'')+'>'+s+'</option>';}).join('')+'<option value=\"อื่นๆ\" '+(sv&&IVS.indexOf(sv)<0?'selected':'')+'>อื่นๆ</option>';return'<div style=\"display:flex;align-items:center;gap:6px;margin-bottom:5px\"><span style=\"font-size:10px;color:#94a3b8;min-width:14px;font-weight:700\">'+( i+1)+'.</span><select id=\"ivs'+i+'\" style=\"flex:1;font-size:12px;padding:5px 8px;border:1px solid #e2e8f0;border-radius:8px\">'+_opts+'</select></div>';}).join('');})()+'</div><div class="mf r2"><div><label>วันที่แทง</label><input type="date" id="ivdt" value="'+iv.insertDate+'" onchange="onIVdc()"></div><div><label>จำนวนวัน</label><input type="number" id="ivdy" min="0" value="'+iv.days+'" readonly style="background:#f5f6f8"></div></div><div class="mf"><label>วันครบเปลี่ยน IV</label><input type="date" id="ivcd" value="'+cd+'" oninput="updCD()"><div id="cdi">'+cdInfo(cd)+'</div></div><div class="section-lbl">สภาพสาย IV</div><div class="mf"><label>Phlebitis Grade</label><div class="phg">'+PHD.map(function(ph){
-  var active=String(iv.ph)===String(ph.g);
-  var bg=active?(ph.s==='p0'?'#dcfce7':ph.s==='p1'||ph.s==='p2'?'#fef3c7':'#fee2e2'):'#f8fafc';
-  var bdr=active?(ph.s==='p0'?'#86efac':ph.s==='p1'||ph.s==='p2'?'#fde68a':'#fca5a5'):'#e2e8f0';
-  var col=active?(ph.s==='p0'?'#15803d':ph.s==='p1'||ph.s==='p2'?'#b45309':'#dc2626'):'#374151';
-  return'<div class="pho'+(active?' '+ph.s:'')+'" onclick="sPh(this,'+ph.g+',\''+ph.s+'\');return false;" style="text-align:left;padding:8px 12px;background:'+bg+';border-color:'+bdr+';color:'+col+'">'
-    +'<div style="font-weight:700;font-size:12px">'+ph.l+'</div>'
-    +'<div style="font-size:11px;margin-top:2px;opacity:.85">'+ph.desc+'</div>'
-    +'</div>';
-}).join('')+'</div></div><div class="mf"><label>IV ติด / ไม่ติด</label><div class="leak-wrap"><div class="leak-btn lk-no'+(iv.leak===false?' on':'')+'" id="lkNo" onclick="selLeak(false)">ไม่ติด</div><div class="leak-btn lk-yes'+(iv.leak===true?' on':'')+'" id="lkYes" onclick="selLeak(true)">ติด</div></div></div><div class="mft"><button class="btn" onclick="closeModal()">ยกเลิก</button><button class="btn btn-blue" onclick="svIV('+id+')">บันทึก</button></div>');
+  var cd=iv.insertDate?addDays(iv.insertDate,4):'';
+  showModal('<h3>ตรวจ IV Line</h3><div class="msub">เตียง '+p.bed+' | <strong>'+thaiDate(curDate)+'</strong></div><div class="section-lbl">ตำแหน่งแทง (Site) — สูงสุด 4 ตำแหน่ง</div>'+(function(){var _sites=iv.sites&&iv.sites.length===4?iv.sites:(iv.site?[iv.site,'','','']:['','','','']);return _sites.map(function(sv,i){var _opts='<option value=\"\">'+(i+1)+'. -- เลือก --</option>'+IVS.map(function(s){return'<option value=\"'+s+'\" '+(sv===s?'selected':'')+'>'+s+'</option>';}).join('')+'<option value=\"อื่นๆ\" '+(sv&&IVS.indexOf(sv)<0?'selected':'')+'>อื่นๆ</option>';return'<div style=\"display:flex;align-items:center;gap:6px;margin-bottom:5px\"><span style=\"font-size:10px;color:#94a3b8;min-width:14px;font-weight:700\">'+(i+1)+'.</span><select id=\"ivs'+i+'\" style=\"flex:1;font-size:12px;padding:5px 8px;border:1px solid #e2e8f0;border-radius:8px\">'+_opts+'</select></div>';}).join('');})()+'<div class="section-lbl">สภาพสาย IV</div><div class="mf"><label>Phlebitis Grade</label><div class="phg">'+PHD.map(function(ph){return'<div class="pho'+(String(iv.ph)===String(ph.g)?' '+ph.s:'')+'" onclick="sPh(this,'+ph.g+',\''+ph.s+'\')">'+ph.l+'</div>';}).join('')+'</div></div><div class="mf"><label>IV ติด / ไม่ติด</label><div class="leak-wrap"><div class="leak-btn lk-no'+(iv.leak===false?' on':'')+'" id="lkNo" onclick="selLeak(false)">ไม่ติด</div><div class="leak-btn lk-yes'+(iv.leak===true?' on':'')+'" id="lkYes" onclick="selLeak(true)">ติด</div></div></div><div class="mft"><button class="btn" onclick="closeModal()">ยกเลิก</button><button class="btn btn-blue" onclick="svIV('+id+')">บันทึก</button></div>');
 }
-function onIVdc(){var v=document.getElementById('ivdt').value;if(v){var days=Math.max(0,Math.floor((new Date(curDate+'T00:00:00')-new Date(v+'T00:00:00'))/86400000));var e=document.getElementById('ivdy');if(e)e.value=days;var ec=document.getElementById('ivcd');if(ec&&!ec.value){ec.value=addDays(v,4);}updCD();}}
+function onIVdc(){var v=document.getElementById('ivdt').value;if(v){var days=Math.max(0,Math.floor((new Date(curDate+'T00:00:00')-new Date(v+'T00:00:00'))/86400000));var e=document.getElementById('ivdy');if(e)e.value=days;var ec=document.getElementById('ivcd');if(ec){ec.value=addDays(v,4);}updCD();}}
 function updCD(){var c=document.getElementById('ivcd'),i=document.getElementById('cdi');if(c&&i)i.innerHTML=cdInfo(c.value);}
 function sPh(el,g,s){curPh=String(g);document.querySelectorAll('.pho').forEach(function(e){e.className='pho';});el.className='pho '+s;}
 function selLeak(val){curLeak=val;var no=document.getElementById('lkNo'),yes=document.getElementById('lkYes');if(no)no.className='leak-btn lk-no'+(val===false?' on':'');if(yes)yes.className='leak-btn lk-yes'+(val===true?' on':'');}
 function svIV(id){var p=P.find(function(x){return x.id===id;});if(!p)return;var d=getDay(p,curDate);var sitesArr=[0,1,2,3].map(function(i){var el=document.getElementById('ivs'+i);return el?el.value:'';});
   d.iv2.sites=sitesArr;
-  d.iv2.site=sitesArr.filter(function(s){return s;}).join(', ');d.iv2.insertDate=document.getElementById('ivdt').value;d.iv2.days=document.getElementById('ivdy').value;d.iv2.changeDate=document.getElementById('ivcd').value;if(curPh!==null)d.iv2.ph=curPh;if(curLeak!==null)d.iv2.leak=curLeak;curPh=null;curLeak=null;d.ivOk=true;saveData();closeModal();render();}
+  d.iv2.site=sitesArr.filter(function(s){return s;}).join(', ');if(curPh!==null)d.iv2.ph=curPh;if(curLeak!==null)d.iv2.leak=curLeak;curPh=null;curLeak=null;d.ivOk=true;saveData();closeModal();render();}
 
 // FOLEY
 // FOLEY - new structure
@@ -1175,11 +1090,11 @@ function admitKey(bed,date){return 'admit_'+bed+'_'+date;}
 
 function getAdmit(bed,date){
   var key=admitKey(bed,date);
-  try{var s=localStorage.getItem(key);if(s)return JSON.parse(s);}catch(e){}
+  try{var s=_DB.getItem(key);if(s)return JSON.parse(s);}catch(e){}
   // ดึงข้อมูลจากเวร/วันก่อนหน้าล่าสุด
   var prev=null;
   var allKeys=[];
-  try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.startsWith('admit_'+bed+'_'))allKeys.push(k);}}catch(e){}
+  try{for(var i=0;i<_DB.length;i++){var k=_DB.key(i);if(k&&k.startsWith('admit_'+bed+'_'))allKeys.push(k);}}catch(e){}
   // เรียงตามวันที่ (key = admit_bed_date) เอาวันก่อน date เท่านั้น
   var pastKeys=allKeys.map(function(k){return k.replace('admit_'+bed+'_','');}).filter(function(d){return d<=date;}).sort();
   // ถ้ามีวันเดียวกันก็ใช้ได้ (เวรก่อนหน้าในวันเดียวกัน)
@@ -1188,7 +1103,7 @@ function getAdmit(bed,date){
     var prevDates=pastKeys.filter(function(d){return d<date;});
     var useDate=prevDates.length?prevDates[prevDates.length-1]:null;
     if(useDate){
-      try{var ps=localStorage.getItem(admitKey(bed,useDate));if(ps)prev=JSON.parse(ps);}catch(e){}
+      try{var ps=_DB.getItem(admitKey(bed,useDate));if(ps)prev=JSON.parse(ps);}catch(e){}
     }
   }
   // สืบทอดข้อมูลทั้งหมด ยกเว้น shifts (ต้องประเมินใหม่ทุกเวร)
@@ -1207,10 +1122,7 @@ function getAdmit(bed,date){
 }
 
 function saveAdmit(bed,date,data){
-  var key='admit_'+bed+'_'+date;
-  var val=JSON.stringify(data);
-  localStorage.setItem(key,val);
-  if(window.cloudSave)window.cloudSave(key,val);
+  try{_DB.setItem(admitKey(bed,date),JSON.stringify(data));}catch(e){}
 }
 
 function setIll(bed,val){
@@ -1324,8 +1236,8 @@ function calcGrade(d){
 function openAdmitExport(){
   // Collect all dates from localStorage admit_ keys
   var allDates={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(k&&k.startsWith('admit_')){
       var parts=k.split('_');
       if(parts.length>=3&&parts[2])allDates[parts[2]]=1;
@@ -1391,7 +1303,7 @@ function doAdmitExportDay2(){
 function doAdmitExportMonth2(){
   var ym=document.getElementById('admit-exp-month').value;
   var allDates={};
-  for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.startsWith('admit_')){var parts=k.split('_');if(parts.length>=3)allDates[parts[2]]=1;}}
+  for(var i=0;i<_DB.length;i++){var k=_DB.key(i);if(k&&k.startsWith('admit_')){var parts=k.split('_');if(parts.length>=3)allDates[parts[2]]=1;}}
   var dates=Object.keys(allDates).sort().filter(function(d){return d.startsWith(ym);});
   if(!dates.length){alert('ไม่มีข้อมูลในเดือนที่เลือก');return;}
   var csv=buildAdmitCSV(dates);
@@ -1404,7 +1316,7 @@ function doAdmitExportMonth2(){
 function doAdmitExportYear2(){
   var y=document.getElementById('admit-exp-year').value;
   var allDates={};
-  for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.startsWith('admit_')){var parts=k.split('_');if(parts.length>=3)allDates[parts[2]]=1;}}
+  for(var i=0;i<_DB.length;i++){var k=_DB.key(i);if(k&&k.startsWith('admit_')){var parts=k.split('_');if(parts.length>=3)allDates[parts[2]]=1;}}
   var dates=Object.keys(allDates).sort().filter(function(d){return d.startsWith(y);});
   if(!dates.length){alert('ไม่มีข้อมูลในปีที่เลือก');return;}
   var csv=buildAdmitCSV(dates);
@@ -1422,8 +1334,8 @@ function doAdmitExportRange(){
   if(!fromEl||!toEl)return;
   var from=fromEl.value,to=toEl.value;
   var allDates={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(k&&k.startsWith('admit_')){var parts=k.split('_');if(parts.length>=3)allDates[parts[2]]=1;}
   }
   var dates=Object.keys(allDates).sort().filter(function(d){return d>=from&&d<=to;});
@@ -1443,8 +1355,8 @@ function doAdmitExportRange(){
 
 function getAdmitAllDates(){
   var dates={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(k&&k.startsWith('admit_')){
       var parts=k.split('_');
       if(parts.length>=3)dates[parts[2]]=1;
@@ -1461,14 +1373,19 @@ function buildAdmitCSV(dates){
   var bom=String.fromCharCode(65279);
   var SHIFT_LBL={night:'ดึก',morning:'เช้า',afternoon:'บ่าย'};
   var TYPE_MAP={'4':'4 หนักมาก','3':'3 หนัก','2':'2 ปานกลาง','1':'1 พักฟื้น'};
-  // Fixed columns — export all
-  var headers=['วันที่','เวร','เตียง','ชื่อ','การวินิจฉัย','ประเภท','สภาวะความเจ็บป่วย','ADL','การสอน','การรักษา','การบรรเทาปวด','รหัสประเภท'];
+  var headers=['วันที่','เวร','เตียง','ชื่อ','การวินิจฉัย','ประเภท','สภาวะความเจ็บป่วย','ADL','การสอน','การรักษา','การบรรเทาปวด','รหัสประเภท','พยาบาล','ผู้ช่วยเหลือ'];
   var rows=[headers.join(',')];
   dates.forEach(function(dt){
+    var assignData=getAssign(dt);
     ['night','morning','afternoon'].forEach(function(shift){
+      // build bed->nurse and bed->aide maps for this shift
+      var bedNurse={},bedAide={};
+      var sd=assignData[shift];
+      (sd.nurses||[]).forEach(function(n){(n.beds||[]).forEach(function(b){bedNurse[b]=n.name||'';});});
+      (sd.aides||[]).forEach(function(a){(a.beds||[]).forEach(function(b){bedAide[b]=a.name||'';});});
+
       FIXED_BEDS.forEach(function(bed){
         var d=getAdmit(bed,dt);
-        // skip completely empty beds
         if(!d.name&&!d.type&&!d.dx&&!d.ill&&!d.adl&&!d.teach&&!d.treat&&!d.pain)return;
         var gr=calcGrade(d);
         var illVal=d.ill&&d.ill.length?d.ill[0]:'';
@@ -1476,10 +1393,7 @@ function buildAdmitCSV(dates){
         var typeFull=tNum&&gr.grade?(tNum+gr.grade.toUpperCase()):'';
         var illLabel='';
         if(illVal){
-          try{
-            var found=ILL_OPTS.find(function(o){return o.v===illVal;});
-            if(found)illLabel=found.label.replace(/,/g,' ');
-          }catch(e){}
+          try{var found=ILL_OPTS.find(function(o){return o.v===illVal;});if(found)illLabel=found.label.replace(/,/g,' ');}catch(e){}
         }
         var row=[
           thaiDate(dt),
@@ -1493,7 +1407,9 @@ function buildAdmitCSV(dates){
           d.teach||'',
           d.treat||'',
           d.pain||'',
-          typeFull
+          typeFull,
+          '"'+(bedNurse[bed]||'')+'"',
+          '"'+(bedAide[bed]||'')+'"'
         ];
         rows.push(row.join(','));
       });
@@ -1736,7 +1652,7 @@ function renderAdmit(){
 // assign data: {night:{nurses:[{name:'',beds:[]}x8], aides:[{name:'',beds:[]}x3]}, morning:{...}, afternoon:{...}}
 function assignKey(date){return 'assign_'+date;}
 function getAssign(date){
-  try{var s=localStorage.getItem(assignKey(date));if(s)return JSON.parse(s);}catch(e){}
+  try{var s=_DB.getItem(assignKey(date));if(s)return JSON.parse(s);}catch(e){}
   function makeShift(){
     var nurses=[];for(var i=0;i<8;i++)nurses.push({name:'',beds:[]});
     var aides=[];for(var i=0;i<3;i++)aides.push({name:'',beds:[]});
@@ -1745,10 +1661,7 @@ function getAssign(date){
   return{night:makeShift(),morning:makeShift(),afternoon:makeShift()};
 }
 function saveAssign(date,data){
-  var key='assign_'+date;
-  var val=JSON.stringify(data);
-  localStorage.setItem(key,val);
-  if(window.cloudSave)window.cloudSave(key,val);
+  try{_DB.setItem(assignKey(date),JSON.stringify(data));}catch(e){}
 }
 
 var admitTabCur='admit';
@@ -2050,11 +1963,11 @@ function updateDxList(val){
 function collectNamesFromRegistry(field){
   // Collect unique names from all registry months
   var names={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(!k||!k.startsWith('registry_'))continue;
     try{
-      var data=JSON.parse(localStorage.getItem(k));
+      var data=JSON.parse(_DB.getItem(k));
       if(data&&data.rows){
         data.rows.forEach(function(r){
           var v=(r[field]||'').trim();
@@ -2081,12 +1994,12 @@ function updateNurseList(val){
   var q=val.toLowerCase();
   // collect from registry nurse field and assign nurse names
   var names={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(!k)continue;
     try{
       if(k.startsWith('registry_')){
-        var data=JSON.parse(localStorage.getItem(k));
+        var data=JSON.parse(_DB.getItem(k));
         if(data&&data.rows){
           data.rows.forEach(function(r){
             ['nurse','disch_nurse'].forEach(function(f){
@@ -2096,7 +2009,7 @@ function updateNurseList(val){
         }
       }
       if(k.startsWith('assign_')){
-        var adata=JSON.parse(localStorage.getItem(k));
+        var adata=JSON.parse(_DB.getItem(k));
         if(adata){
           ['night','morning','afternoon'].forEach(function(shift){
             var sd=adata[shift];if(!sd)return;
@@ -2133,8 +2046,8 @@ function openAssignSummary(preselYM){
   var months={'01':'มกราคม','02':'กุมภาพันธ์','03':'มีนาคม','04':'เมษายน','05':'พฤษภาคม','06':'มิถุนายน','07':'กรกฎาคม','08':'สิงหาคม','09':'กันยายน','10':'ตุลาคม','11':'พฤศจิกายน','12':'ธันวาคม'};
   var curYM=(preselYM||admitDate).substring(0,7);
   var allYMs={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(k&&k.startsWith('assign_')){var d=k.replace('assign_','');if(d.length>=7)allYMs[d.substring(0,7)]=1;}
   }
   allYMs[curYM]=1;
@@ -2153,13 +2066,13 @@ function openAssignSummary(preselYM){
     +(function(){
       var names={};
       var ym2=document.getElementById?((document.getElementById('sum-month-sel')||{}).value||curRegYM||admitDate.substring(0,7)):admitDate.substring(0,7);
-      for(var i2=0;i2<localStorage.length;i2++){
-        var k2=localStorage.key(i2);
+      for(var i2=0;i2<_DB.length;i2++){
+        var k2=_DB.key(i2);
         if(!k2||!k2.startsWith('assign_'))continue;
         var d2=k2.replace('assign_','');
         if(!d2.startsWith(ym2))continue;
         try{
-          var ad=JSON.parse(localStorage.getItem(k2));
+          var ad=JSON.parse(_DB.getItem(k2));
           ['night','morning','afternoon'].forEach(function(sh){
             var sd2=ad[sh];if(!sd2)return;
             (sd2.nurses||[]).concat(sd2.aides||[]).forEach(function(p){
@@ -2189,8 +2102,8 @@ function renderAssignSummary(){
 
   // Collect all assign dates in this month
   var assignDates=[];
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(k&&k.startsWith('assign_')){
       var d=k.replace('assign_','');
       if(d.startsWith(ym))assignDates.push(d);
@@ -2306,8 +2219,8 @@ function exportAssignSummaryCSV(){
   var SHIFT_LABELS={night:'ดึก',morning:'เช้า',afternoon:'บ่าย'};
   var SHIFTS_LIST=['night','morning','afternoon'];
   var assignDates=[];
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(k&&k.startsWith('assign_')){var d=k.replace('assign_','');if(d.startsWith(ym))assignDates.push(d);}
   }
   assignDates.sort();
@@ -2348,8 +2261,8 @@ function openAssignExport(){
   var months={'01':'มกราคม','02':'กุมภาพันธ์','03':'มีนาคม','04':'เมษายน','05':'พฤษภาคม','06':'มิถุนายน','07':'กรกฎาคม','08':'สิงหาคม','09':'กันยายน','10':'ตุลาคม','11':'พฤศจิกายน','12':'ธันวาคม'};
   var curYM=admitDate.substring(0,7);
   var allYMs={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(k&&k.startsWith('assign_')){var d=k.replace('assign_','');if(d.length>=7)allYMs[d.substring(0,7)]=1;}
   }
   allYMs[curYM]=1;
@@ -2362,8 +2275,8 @@ function openAssignExport(){
   var nurseNames={};
   Object.keys(allYMs).forEach(function(ym2){
     var assignDates2=[];
-    for(var j=0;j<localStorage.length;j++){
-      var kj=localStorage.key(j);
+    for(var j=0;j<_DB.length;j++){
+      var kj=_DB.key(j);
       if(kj&&kj.startsWith('assign_')){var dj=kj.replace('assign_','');if(dj.startsWith(ym2))assignDates2.push(dj);}
     }
     assignDates2.forEach(function(dt){
@@ -2401,8 +2314,8 @@ function doExportAssignCSV(){
   var SHIFT_LABELS={night:'ดึก',morning:'เช้า',afternoon:'บ่าย'};
   var SHIFTS_LIST=['night','morning','afternoon'];
   var assignDates=[];
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(k&&k.startsWith('assign_')){var d=k.replace('assign_','');if(d.startsWith(ym))assignDates.push(d);}
   }
   // Include current date if in same month even if not saved yet
@@ -2450,7 +2363,7 @@ function doExportAssignCSV(){
     });
   });
 
-  if(rows.length<=1){alert('ไม่มีข้อมูล Assign '+(nurseFilter?'ของ '+nurseFilter+' ':'')+'ในเดือนนี้');return;}
+  if(rows.length<=1){alert('ไม่มีข้อมูล Assign ในเดือนนี้');return;}
   var csv=bom+rows.join('\n');
   var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
   var url=URL.createObjectURL(blob);
@@ -2461,8 +2374,8 @@ function doExportAssignCSV(){
 
 function openBackup(){
   var totalKeys=0;
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(k&&(k.startsWith('admit_')||k.startsWith('assign_')||k.startsWith('pr_')||k==='patients'))totalKeys++;
   }
   showModal(
@@ -2487,9 +2400,9 @@ function openBackup(){
 
 function doBackupJSON(){
   var data={_meta:{version:1,date:todayISO(),app:'MorningRound'},localStorage:{}};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
-    if(k)data.localStorage[k]=localStorage.getItem(k);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
+    if(k)data.localStorage[k]=_DB.getItem(k);
   }
   var json=JSON.stringify(data,null,2);
   var bom=String.fromCharCode(65279);
@@ -2537,7 +2450,7 @@ function doRestoreJSON(){
   var keys=Object.keys(_restoreData.localStorage);
   var count=0;
   keys.forEach(function(k){
-    try{localStorage.setItem(k,_restoreData.localStorage[k]);count++;}catch(e){}
+    try{_DB.setItem(k,_restoreData.localStorage[k]);count++;}catch(e){}
   });
   _restoreData=null;
   alert('Restore สำเร็จ! นำเข้า '+count+' รายการ กรุณา Refresh หน้าเพื่อโหลดข้อมูลใหม่');
@@ -2547,14 +2460,11 @@ function doRestoreJSON(){
 
 function registryKey(ym){return 'registry_'+ym;}
 function getRegistry(ym){
-  try{var s=localStorage.getItem(registryKey(ym));if(s)return JSON.parse(s);}catch(e){}
+  try{var s=_DB.getItem(registryKey(ym));if(s)return JSON.parse(s);}catch(e){}
   return{rows:[]};
 }
 function saveRegistry(ym,data){
-  var key='registry_'+ym;
-  var val=JSON.stringify(data);
-  localStorage.setItem(key,val);
-  if(window.cloudSave)window.cloudSave(key,val);
+  try{_DB.setItem(registryKey(ym),JSON.stringify(data));}catch(e){}
 }
 
 function renderRegistry(){
@@ -2564,8 +2474,8 @@ function renderRegistry(){
 
   // collect available months
   var allYMs={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(k&&k.startsWith('admit_')){var p=k.split('_');if(p.length>=3)allYMs[p[2].substring(0,7)]=1;}
     if(k&&k.startsWith('registry_'))allYMs[k.replace('registry_','')]=1;
   }
@@ -2582,14 +2492,14 @@ function renderRegistry(){
 
   // Pre-fill from admit data for beds that have entries this month
   var admitBeds={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(!k||!k.startsWith('admit_'))continue;
     var p=k.split('_');if(p.length<3)continue;
     if(p[2].substring(0,7)!==curYM)continue;
     var bed=parseInt(p[1]);
     try{
-      var d=JSON.parse(localStorage.getItem(k));
+      var d=JSON.parse(_DB.getItem(k));
       if(d&&(d.name||d.dx)){
         if(!admitBeds[bed]||p[2]>admitBeds[bed].date)
           admitBeds[bed]={name:d.name||'',dx:d.dx||'',date:p[2]};
@@ -2621,16 +2531,16 @@ function renderRegistry(){
       +'<td style="padding:4px 5px;min-width:70px"><input class="adm-input" list="nurse-list" value="'+escHtml(r.nurse||'')+'" placeholder="พยาบาล" data-row="'+ri+'" data-field="nurse" oninput="updateNurseList(this.value)" onchange="updateRegRow(this)" style="width:80px;font-size:13px;padding:6px 8px"></td>'
       +'<td style="padding:4px 5px;min-width:60px">'+cellInput(ri,'rights',r.rights,'สิทธิ์',60)+'</td>'
 
-      +'<td style="padding:4px 5px;min-width:110px"><input type="date" class="adm-input" value="'+(r.admit_date||'')+'" data-row="'+ri+'" data-field="admit_date" onchange="updateRegRow(this)" style="width:120px;font-size:13px;padding:6px 8px"></td>'
-      +'<td style="padding:4px 5px;min-width:70px"><input type="time" class="adm-input" value="'+(r.admit_time||'')+'" data-row="'+ri+'" data-field="admit_time" onchange="updateRegRow(this)" style="width:90px;font-size:13px;padding:6px 8px"></td>'
+      +'<td style="padding:4px 5px;min-width:110px"><input type="date" class="adm-input" value="'+(r.admit_date||'')+'" data-row="'+ri+'" data-field="admit_date" onchange="updateRegRow(this);calcLOS('+ri+')" style="width:120px;font-size:13px;padding:6px 8px"></td>'
+      +'<td style="padding:4px 5px;min-width:100px"><input type="time" class="adm-input" value="'+(r.admit_time||'')+'" data-row="'+ri+'" data-field="admit_time" oninput="updateRegRow(this)" onchange="updateRegRow(this)" onblur="updateRegRow(this)" style="width:110px;font-size:13px;padding:6px 8px;cursor:pointer"></td>'
       +'<td style="padding:4px 5px;min-width:80px"><select class="adm-select" data-row="'+ri+'" data-field="admit_type" onchange="updateRegRow(this)" style="width:90px;font-size:13px;padding:6px 7px"><option value="">—</option><option value="รับใหม่" '+(r.admit_type==="รับใหม่"?"selected":"")+'>รับใหม่</option><option value="รับย้าย" '+(r.admit_type==="รับย้าย"?"selected":"")+'>รับย้าย</option></select></td>'
       +'<td style="padding:4px 5px;min-width:100px">'+cellInput(ri,'admit_note',r.admit_note,'หมายเหตุ',100)+'</td>'
       +'<td style="padding:4px 5px;min-width:80px"><input class="adm-input" list="nurse-list" value="'+escHtml(r.disch_nurse||'')+'" placeholder="พยาบาล" data-row="'+ri+'" data-field="disch_nurse" oninput="updateNurseList(this.value)" onchange="updateRegRow(this)" style="width:90px;font-size:13px;padding:6px 8px"></td>'
-      +'<td style="padding:4px 5px;min-width:110px"><input type="date" class="adm-input" value="'+(r.disch_date||'')+'" data-row="'+ri+'" data-field="disch_date" onchange="updateRegRow(this);calcLOS(ri)" style="width:120px;font-size:13px;padding:6px 8px"></td>'
-      +'<td style="padding:4px 5px;min-width:70px"><input type="time" class="adm-input" value="'+(r.disch_time||'')+'" data-row="'+ri+'" data-field="disch_time" onchange="updateRegRow(this)" style="width:90px;font-size:13px;padding:6px 8px"></td>'
+      +'<td style="padding:4px 5px;min-width:110px"><input type="date" class="adm-input" value="'+(r.disch_date||'')+'" data-row="'+ri+'" data-field="disch_date" onchange="updateRegRow(this);calcLOS('+ri+')" style="width:120px;font-size:13px;padding:6px 8px"></td>'
+      +'<td style="padding:4px 5px;min-width:100px"><input type="time" class="adm-input" value="'+(r.disch_time||'')+'" data-row="'+ri+'" data-field="disch_time" oninput="updateRegRow(this)" onchange="updateRegRow(this)" onblur="updateRegRow(this)" style="width:110px;font-size:13px;padding:6px 8px;cursor:pointer"></td>'
       +'<td style="padding:4px 5px;min-width:90px"><select class="adm-select" data-row="'+ri+'" data-field="disch_type" onchange="updateRegRow(this)" style="width:110px;font-size:13px;padding:6px 7px"><option value="">—</option><option value="จำหน่าย" '+(r.disch_type==="จำหน่าย"?"selected":"")+'>จำหน่าย</option><option value="ย้ายไป" '+(r.disch_type==="ย้ายไป"?"selected":"")+'>ย้ายไป</option><option value="Dead" '+(r.disch_type==="Dead"?"selected":"")+'>Dead</option><option value="ปฏิเสธการรักษา" '+(r.disch_type==="ปฏิเสธการรักษา"?"selected":"")+'>ปฏิเสธการรักษา</option></select></td>'
       +'<td style="padding:4px 5px;min-width:100px">'+cellInput(ri,'disch_note',r.disch_note,'หมายเหตุ',100)+'</td>'
-      +'<td style="padding:4px 5px;min-width:50px;text-align:center"><span id="los-'+ri+'" style="font-size:12px;font-weight:700;color:#374151">'+(r.admit_date&&r.disch_date?Math.max(0,Math.round((new Date(r.disch_date)-new Date(r.admit_date))/86400000)):'')+'</span></td>'
+      +'<td style="padding:4px 5px;min-width:50px;text-align:center"><span id="los-'+ri+'" style="font-size:12px">'+(function(){if(!r.admit_date)return'';var endDate=r.disch_date||todayISO();var days=Math.max(0,Math.round((new Date(endDate+'T00:00:00')-new Date(r.admit_date+'T00:00:00'))/86400000));var isEst=!r.disch_date;var col=days>=14?'#dc2626':days>=7?'#d97706':'#374151';return'<span style="font-weight:700;color:'+col+'">'+(isEst?'~':'')+days+'</span>'+(isEst?'<br><span style="font-size:9px;color:#94a3b8">นับถึงวันนี้</span>':'');})()+'</span></td>'
       +'<td style="padding:4px 5px;width:40px;text-align:center"><button onclick="printChartLabel('+ri+')" style="font-size:10px;padding:3px 6px;border:1px solid #93c5fd;border-radius:4px;background:#eff6ff;color:#2563eb;cursor:pointer;margin-bottom:2px;display:block;width:100%" title="พิมพ์ป้ายหน้า Chart">&#128203;</button><button onclick="deleteRegRow('+ri+')" style="font-size:10px;padding:3px 6px;border:1px solid #fca5a5;border-radius:4px;background:#fff;color:#dc2626;cursor:pointer;display:block;width:100%">&#10005;</button></td>'
       +'</tr>';
   }).join('');
@@ -2836,13 +2746,13 @@ function prefillFromAdmit(){
   var ym=getCurRegYM();
   var data=getRegistry(ym);
   var added=0;
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(!k||!k.startsWith('admit_'))continue;
     var p=k.split('_');if(p.length<3)continue;
     if(p[2].substring(0,7)!==ym)continue;
     try{
-      var d=JSON.parse(localStorage.getItem(k));
+      var d=JSON.parse(_DB.getItem(k));
       if(!d||!d.name)continue;
       // Check if this person already in registry
       var exists=data.rows.some(function(r){return r.name===d.name&&r.dx===d.dx;});
@@ -2892,14 +2802,14 @@ function exportRegistryCSV(){
   var months={'01':'มกราคม','02':'กุมภาพันธ์','03':'มีนาคม','04':'เมษายน','05':'พฤษภาคม','06':'มิถุนายน','07':'กรกฎาคม','08':'สิงหาคม','09':'กันยายน','10':'ตุลาคม','11':'พฤศจิกายน','12':'ธันวาคม'};
 
   var byMonth={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
+  for(var i=0;i<_DB.length;i++){
+    var k=_DB.key(i);
     if(!k||!k.startsWith('admit_'))continue;
     var parts=k.split('_');if(parts.length<3)continue;
     var bed=parseInt(parts[1]),date=parts[2],dym=date.substring(0,7);
     if(dym!==ym)continue;
     try{
-      var d=JSON.parse(localStorage.getItem(k));
+      var d=JSON.parse(_DB.getItem(k));
       if(!d||(!d.name&&!d.dx&&!d.type))continue;
       if(!byMonth[bed])byMonth[bed]={bed:bed,name:'',dx:'',type:'',ill:[],firstDate:date,lastDate:date,cre:false,crab:false};
       var r=byMonth[bed];
@@ -2927,7 +2837,7 @@ function exportRegistryCSV(){
     var tNum=illVal?illVal.charAt(0):(r.type||'');
     var latestKey='admit_'+r.bed+'_'+r.lastDate;
     var typeFull=tNum;
-    try{var ld=JSON.parse(localStorage.getItem(latestKey)||'{}');var gr=calcGrade(ld);if(gr.grade)typeFull=tNum+gr.grade.toUpperCase();}catch(e){}
+    try{var ld=JSON.parse(_DB.getItem(latestKey)||'{}');var gr=calcGrade(ld);if(gr.grade)typeFull=tNum+gr.grade.toUpperCase();}catch(e){}
     rows.push([idx+1,r.bed,'"'+r.name+'"','"'+r.dx+'"',thaiDate(r.firstDate),thaiDate(r.lastDate),typeFull,r.cre?'ใช่':'',r.crab?'ใช่':''].join(','));
   });
 
@@ -2941,12 +2851,21 @@ function exportRegistryCSV(){
 }
 
 function calcLOS(ri){
-  var data=getRegistry(getCurRegYM());
+  var ym=getCurRegYM();
+  var data=getRegistry(ym);
   var r=data.rows[ri];
-  if(!r||!r.admit_date||!r.disch_date)return;
-  var days=Math.max(0,Math.round((new Date(r.disch_date)-new Date(r.admit_date))/86400000));
+  if(!r||!r.admit_date)return;
+  var endDate=r.disch_date||todayISO();
+  var days=Math.max(0,Math.round((new Date(endDate+'T00:00:00')-new Date(r.admit_date+'T00:00:00'))/86400000));
+  // save to data
+  if(r.disch_date){r.los=String(days);saveRegistry(ym,data);}
+  // update display
   var el=document.getElementById('los-'+ri);
-  if(el)el.textContent=days;
+  if(!el)return;
+  var isEstimate=!r.disch_date;
+  var color=days>=14?'#dc2626':days>=7?'#d97706':'#374151';
+  el.innerHTML='<span style="font-weight:700;color:'+color+'">'+(isEstimate?'~':'')+days+'</span>'
+    +(isEstimate?'<br><span style="font-size:9px;color:#94a3b8">นับถึงวันนี้</span>':'');
 }
 function printChartLabel(ri){
   var data=getRegistry(getCurRegYM());
@@ -3008,32 +2927,109 @@ function openAssignSummaryRefresh(){
   // Store selected month and reopen
   openAssignSummary(ym);
 }
-function showModal(h){
-  var html='<div class="modal-bd" onclick="if(event.target===this)closeModal()"><div class="modal">'+h+'</div></div>';
-  var mc=document.getElementById('mc');if(mc)mc.innerHTML=html;
-  var mc2=document.getElementById('mc-admit');if(mc2)mc2.innerHTML=html;
-}
-function closeModal(){
-  var mc=document.getElementById('mc');if(mc)mc.innerHTML='';
-  var mc2=document.getElementById('mc-admit');if(mc2)mc2.innerHTML='';
-  curPh=null;curU=null;curLeak=null;curWB=null;
+function showModal(h){document.getElementById('mc').innerHTML='<div class="modal-bd" onclick="if(event.target===this)closeModal()"><div class="modal">'+h+'</div></div>';}
+function closeModal(){document.getElementById('mc').innerHTML='';curPh=null;curU=null;curLeak=null;curWB=null;}
+</script>
+
+<!-- Firebase CDN -->
+<script>
+// ── loading overlay ──
+(function() {
+  var overlay = document.createElement('div');
+  overlay.id = 'fb-loading';
+  overlay.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;gap:16px">'
+    + '<div style="width:44px;height:44px;border:4px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:fbspin 0.8s linear infinite"></div>'
+    + '<div style="font-size:14px;color:#1e3a5f;font-weight:600">กำลังโหลดข้อมูล...</div>'
+    + '</div>';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;z-index:9999';
+  var st = document.createElement('style');
+  st.textContent = '@keyframes fbspin{to{transform:rotate(360deg)}}';
+  document.head.appendChild(st);
+  document.body.appendChild(overlay);
+}());
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+var firebaseConfig = {
+  apiKey: "AIzaSyCp4MCy20AttZQCl6Von_wjXjVOdR_XTc8",
+  authDomain: "round-3d16d.firebaseapp.com",
+  databaseURL: "https://round-3d16d-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "round-3d16d",
+  storageBucket: "round-3d16d.firebasestorage.app",
+  messagingSenderId: "618918009933",
+  appId: "1:618918009933:web:3d23dc54787d85b9005004"
+};
+firebase.initializeApp(firebaseConfig);
+var rtdb = firebase.database();
+var RT_REF = rtdb.ref('ward');
+
+// ── in-memory cache ────────────────────────────────────────
+var _cache = {};
+var _pendingSave = null;
+var _isSaving = false;
+
+function _scheduleSave() {
+  if (_pendingSave) clearTimeout(_pendingSave);
+  _pendingSave = setTimeout(function() {
+    _isSaving = true;
+    RT_REF.set(_cache).then(function() {
+      setTimeout(function(){ _isSaving = false; }, 500);
+    }).catch(function(e){ console.error('RTDB save error', e); _isSaving = false; });
+    _pendingSave = null;
+  }, 500);
 }
 
-initDateBar();initAdmitBar();renderDash();
-// Check Firebase connection
-setTimeout(function(){
-  var el=document.getElementById('sync-status');
-  if(el){
-    if(window.cloudReady){
-      el.innerHTML='☁️ Cloud sync';
-      el.style.background='rgba(16,185,129,.7)';
-      setTimeout(function(){el.style.opacity='0';el.style.transition='opacity 2s';},3000);
+// ── _DB: Realtime Database wrapper (ใช้แทน localStorage) ──
+var _DB = {
+  getItem: function(k) { return _cache.hasOwnProperty(k) ? _cache[k] : null; },
+  setItem: function(k, v) { _cache[k] = String(v); _scheduleSave(); },
+  removeItem: function(k) { delete _cache[k]; _scheduleSave(); },
+  get length() { return Object.keys(_cache).length; },
+  key: function(i) { return Object.keys(_cache)[i] || null; },
+  clear: function() { _cache = {}; _scheduleSave(); }
+};
+
+// ── Real-time listener ─────────────────────────────────────
+(function() {
+  var overlay = document.getElementById('fb-loading');
+  var booted = false;
+
+  RT_REF.on('value', function(snap) {
+    var data = snap.val() || {};
+
+    // ถ้ากำลัง save อยู่ ไม่ต้อง re-render (เพื่อป้องกัน loop)
+    if (_isSaving) return;
+
+    // อัปเดต cache
+    _cache = {};
+    Object.keys(data).forEach(function(k) { _cache[k] = data[k]; });
+
+    if (!booted) {
+      booted = true;
+      P = loadData();
+      if (overlay) overlay.remove();
+      initDateBar(); initAdmitBar(); renderDash();
     } else {
-      el.innerHTML='💾 Offline mode';
-      el.style.background='rgba(245,158,11,.7)';
+      // real-time update จากเครื่องอื่น
+      P = loadData();
+      var page = document.querySelector('.page-section.active');
+      if (page) {
+        if (page.id === 'page-main') render();
+        else if (page.id === 'page-dash') renderDash();
+        else if (page.id === 'page-admit') renderAdmit();
+        else if (page.id === 'page-registry') renderRegistry();
+      }
     }
-  }
-},2000);
+  }, function(e) {
+    console.error('RTDB error', e);
+    if (!booted) {
+      booted = true;
+      if (overlay) overlay.remove();
+      initDateBar(); initAdmitBar(); renderDash();
+    }
+  });
+}());
 </script>
 </body>
 </html>
