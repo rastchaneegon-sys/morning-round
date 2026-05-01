@@ -239,24 +239,29 @@ tbody td{padding:6px 8px;vertical-align:middle}
     };
 
     // ---- Sync: listen for real-time changes ----
-    onSnapshot(collection(db, 'ward'), (snap) => {
-      snap.docChanges().forEach(change => {
-        if (change.type === 'added' || change.type === 'modified') {
-          const key = change.doc.id;
-          const val = change.doc.data().value;
-          if (val !== localStorage.getItem(key)) {
-            localStorage.setItem(key, val);
+    try {
+      onSnapshot(collection(db, 'ward'), (snap) => {
+        snap.docChanges().forEach(change => {
+          if (change.type === 'added' || change.type === 'modified') {
+            const key = change.doc.id;
+            const val = change.doc.data().value;
+            if (val !== localStorage.getItem(key)) {
+              localStorage.setItem(key, val);
+            }
           }
-        }
-        if (change.type === 'removed') {
-          localStorage.removeItem(change.doc.id);
-        }
+          if (change.type === 'removed') {
+            localStorage.removeItem(change.doc.id);
+          }
+        });
+      }, (error) => {
+        // Silently ignore Firebase permission errors - use local data
+        console.warn('Firebase sync error (using local data):', error.code);
+        const el = document.getElementById('sync-status');
+        if(el){ el.innerHTML='💾 Offline mode'; el.style.background='rgba(245,158,11,.7)'; el.style.opacity='1'; }
       });
-      // Re-render current page after sync
-      if (typeof renderDash === 'function') {
-        try { renderDash(); } catch(e) {}
-      }
-    });
+    } catch(e) {
+      console.warn('Firebase onSnapshot failed:', e);
+    }
 
     // ---- Override save functions to use cloud ----
     window.cloudSave = async function(key, value) {
@@ -636,29 +641,10 @@ function openF(id){
   var p=P.find(function(x){return x.id===id;});if(!p)return;
   var d=getDay(p,curDate),sc=fSc(d.f),ans=fAn(d.f),all=ans===13,risk=all?fR(sc):'x';
   var care=risk==='high'?CH:risk==='med'?CM:[];
-  var items=ITEMS.map(function(lbl,i){var v=d.f[i];return'<div class="fi '+(v===true?'yes':v===false?'no':'')+'" id="fi'+id+'_'+i+'"><span class="fnum">'+(i+1)+'.</span><span class="flbl">'+lbl+'</span><div class="ftog"><button type="button" class="fy'+(v===true?' on':'')+'" data-pid="'+id+'" data-qi="'+i+'" data-val="1">ใช่</button><button type="button" class="fn'+(v===false?' on':'')+'" data-pid="'+id+'" data-qi="'+i+'" data-val="0">ไม่ใช่</button></div></div>';}).join('');;
+  var items=ITEMS.map(function(lbl,i){var v=d.f[i];return'<div class="fi '+(v===true?'yes':v===false?'no':'')+'" id="fi'+id+'_'+i+'"><span class="fnum">'+(i+1)+'.</span><span class="flbl">'+lbl+'</span><div class="ftog"><button type="button" class="fy'+(v===true?' on':'')+'" onclick="tF('+id+','+i+',true)">ใช่</button><button type="button" class="fn'+(v===false?' on':'')+'" onclick="tF('+id+','+i+',false)">ไม่ใช่</button></div></div>';}).join('');;
   showModal('<h3>ใบประเมินความเสี่ยงพลัดตกหกล้ม</h3><div class="msub">เตียง '+p.bed+' | <strong>'+thaiDate(curDate)+'</strong></div><div class="sbox '+(all?risk:'x')+'" id="sb"><div><div style="font-size:11px;opacity:.7;margin-bottom:2px">คะแนนรวม (ข้อที่ตอบ ใช่)</div><div class="sn" id="fsc">'+sc+' <span style="font-size:15px;font-weight:400">/ 13</span></div><div style="font-size:10px;opacity:.6;margin-top:2px">0-2 ต่ำ | 3-5 ปานกลาง | >=6 สูง</div></div><div class="srisk" id="frisk">'+(all?RL[risk]:'กรุณาตอบให้ครบทุกข้อ')+'</div></div><div class="fp"><span style="color:#8a92a0">ตอบแล้ว</span><div class="fp-bar"><div class="fp-fill" id="fpf" style="width:'+Math.round(ans/13*100)+'%"></div></div><span style="font-weight:500;min-width:36px;text-align:right" id="fpcnt">'+ans+' / 13</span></div><div id="cb">'+(all&&care.length?'<div class="cbox '+risk+'"><strong>แนวทางการดูแล</strong><ul>'+care.map(function(c){return'<li>'+c+'</li>';}).join('')+'</ul></div>':'')+'</div><div id="fil">'+items+'</div><div id="wbox" class="wbox">&#9888; กรุณาตอบทุกข้อก่อนบันทึก — ยังเหลืออีก <strong id="wcnt">'+(13-ans)+'</strong> ข้อ</div><div class="mft"><button class="btn" onclick="closeModal()">ยกเลิก</button><button class="btn" onclick="clrF('+id+')">ล้างค่า</button><button class="btn btn-blue" id="saveF" onclick="saveF('+id+')" '+(all?'':'disabled')+'>บันทึก</button></div>');
-  // Add event delegation for falling buttons
-  var mcEl = document.getElementById('mc') || document.getElementById('mc-admit');
-  if(mcEl) {
-    mcEl._fallingHandler && mcEl.removeEventListener('click', mcEl._fallingHandler, true);
-    mcEl._fallingHandler = function(e) {
-      var btn = e.target;
-      while(btn && btn !== mcEl) {
-        if(btn.tagName === 'BUTTON' && btn.hasAttribute('data-pid')) {
-          var pid = parseInt(btn.getAttribute('data-pid'));
-          var qi = parseInt(btn.getAttribute('data-qi'));
-          var val = btn.getAttribute('data-val') === '1';
-          tF(pid, qi, val);
-          e.stopPropagation();
-          return;
-        }
-        btn = btn.parentElement;
-      }
-    };
-    mcEl.addEventListener('click', mcEl._fallingHandler, true);
-  }
 }
+  
 function tF(id,i,val){
   var p=P.find(function(x){return x.id===id;});if(!p)return;var d=getDay(p,curDate);
   d.f[i]=d.f[i]===val?null:val;
@@ -2356,6 +2342,7 @@ function renderAssignSummary(){
 
 function exportAssignSummaryCSV(){
   var ym=document.getElementById('sum-month-sel').value;
+  var nurseFilter=(document.getElementById('sum-name-filter')||{}).value||'';
   var SHIFT_LABELS={night:'ดึก',morning:'เช้า',afternoon:'บ่าย'};
   var SHIFTS_LIST=['night','morning','afternoon'];
   var assignDates=[];
@@ -2939,60 +2926,6 @@ function renderRegistryMonth(ym){
 
 var curRegYM='';
 
-function exportRegistryCSV(){
-  var sel=document.getElementById('reg-month');
-  var ym=sel?sel.value:(admitDate?admitDate.substring(0,7):todayISO().substring(0,7));
-  var months={'01':'มกราคม','02':'กุมภาพันธ์','03':'มีนาคม','04':'เมษายน','05':'พฤษภาคม','06':'มิถุนายน','07':'กรกฎาคม','08':'สิงหาคม','09':'กันยายน','10':'ตุลาคม','11':'พฤศจิกายน','12':'ธันวาคม'};
-
-  var byMonth={};
-  for(var i=0;i<localStorage.length;i++){
-    var k=localStorage.key(i);
-    if(!k||!k.startsWith('admit_'))continue;
-    var parts=k.split('_');if(parts.length<3)continue;
-    var bed=parseInt(parts[1]),date=parts[2],dym=date.substring(0,7);
-    if(dym!==ym)continue;
-    try{
-      var d=JSON.parse(localStorage.getItem(k));
-      if(!d||(!d.name&&!d.dx&&!d.type))continue;
-      if(!byMonth[bed])byMonth[bed]={bed:bed,name:'',dx:'',type:'',ill:[],firstDate:date,lastDate:date,cre:false,crab:false};
-      var r=byMonth[bed];
-      if(date<r.firstDate)r.firstDate=date;
-      if(date>r.lastDate)r.lastDate=date;
-      if(d.name)r.name=d.name;
-      if(d.dx)r.dx=d.dx;
-      if(d.type)r.type=d.type;
-      if(d.ill&&d.ill.length)r.ill=d.ill;
-    }catch(e){}
-  }
-  P.forEach(function(p){
-    Object.keys(p.days).forEach(function(date){
-      if(date.substring(0,7)!==ym)return;
-      var d=p.days[date];
-      if(byMonth[p.bed]){if(d.cre)byMonth[p.bed].cre=true;if(d.crab)byMonth[p.bed].crab=true;}
-    });
-  });
-
-  var records=Object.values(byMonth).sort(function(a,b){return a.bed-b.bed;});
-  var bom=String.fromCharCode(65279);
-  var rows=[['ลำดับ','เตียง','ชื่อ-สกุล','การวินิจฉัย','วันแรก','วันล่าสุด','ประเภทผู้ป่วย','CRE','CRAB'].join(',')];
-  records.forEach(function(r,idx){
-    var illVal=r.ill&&r.ill.length?r.ill[0]:'';
-    var tNum=illVal?illVal.charAt(0):(r.type||'');
-    var latestKey='admit_'+r.bed+'_'+r.lastDate;
-    var typeFull=tNum;
-    try{var ld=JSON.parse(localStorage.getItem(latestKey)||'{}');var gr=calcGrade(ld);if(gr.grade)typeFull=tNum+gr.grade.toUpperCase();}catch(e){}
-    rows.push([idx+1,r.bed,'"'+r.name+'"','"'+r.dx+'"',thaiDate(r.firstDate),thaiDate(r.lastDate),typeFull,r.cre?'ใช่':'',r.crab?'ใช่':''].join(','));
-  });
-
-  var y=parseInt(ym.split('-')[0])+543;
-  var m=months[ym.split('-')[1]]||ym.split('-')[1];
-  var csv=bom+rows.join('\n');
-  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');a.href=url;a.download='registry_'+m+y+'.csv';
-  var b2=document.body||document.documentElement;b2.appendChild(a);a.click();setTimeout(function(){b2.removeChild(a);},100);URL.revokeObjectURL(url);
-}
-
 function calcLOS(ri){
   var data=getRegistry(getCurRegYM());
   var r=data.rows[ri];
@@ -3062,18 +2995,20 @@ function openAssignSummaryRefresh(){
   openAssignSummary(ym);
 }
 function showModal(h){
-  var html='<div class="modal-bd"><div class="modal">'+h+'</div></div>';
-  ['mc','mc-admit'].forEach(function(mcId){
-    var el=document.getElementById(mcId);
-    if(!el)return;
-    el.innerHTML=html;
-    var bd=el.querySelector('.modal-bd');
-    if(!bd)return;
-    // Close on backdrop tap
-    function tryClose(e){if(e.target===bd){e.preventDefault();closeModal();}}
-    bd.addEventListener('click',tryClose,false);
-    bd.addEventListener('touchend',tryClose,false);
-  });
+  // Clear both containers first
+  var mc=document.getElementById('mc');if(mc)mc.innerHTML='';
+  var mc2=document.getElementById('mc-admit');if(mc2)mc2.innerHTML='';
+  var html='<div id="modal-overlay" style="position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;overflow-y:auto" onclick="if(event.target===this)closeModal()"><div style="background:#fff;border-radius:16px;padding:24px 20px;width:92%;max-width:560px;max-height:90vh;overflow-y:auto;margin:auto">'+h+'</div></div>';
+  // Write ONLY to the container inside the currently active page section
+  // to avoid duplicate element IDs which break getElementById lookups
+  var activePage=document.querySelector('.page-section.active');
+  var target=null;
+  if(activePage){
+    target=activePage.querySelector('#mc')||activePage.querySelector('#mc-admit');
+  }
+  // Fallback: whichever container exists
+  if(!target)target=mc||mc2;
+  if(target)target.innerHTML=html;
 }
 function closeModal(){
   var mc=document.getElementById('mc');if(mc)mc.innerHTML='';
@@ -3081,43 +3016,7 @@ function closeModal(){
   curPh=null;curU=null;curLeak=null;curWB=null;
 }
 
-// Global touch delegation - prevent double fire
-(function(){
-  var lastTouch=0;
-  function handleTouch(e){
-    var now=Date.now();
-    if(now-lastTouch<300)return; // debounce
-    var t=e.target;
-    for(var i=0;i<5;i++){
-      if(!t||t===document.body)break;
-      if(t.tagName==='BUTTON'){
-        if(t.hasAttribute('data-pid')){
-          e.preventDefault();
-          e.stopPropagation();
-          lastTouch=now;
-          tF(parseInt(t.getAttribute('data-pid')),
-             parseInt(t.getAttribute('data-qi')),
-             t.getAttribute('data-val')==='1');
-          return;
-        }
-        break;
-      }
-      t=t.parentElement;
-    }
-  }
-  document.addEventListener('touchstart',function(e){
-    var t=e.target;
-    for(var i=0;i<5;i++){
-      if(!t||t===document.body)break;
-      if(t.tagName==='BUTTON'&&t.hasAttribute('data-pid')){
-        e.preventDefault(); // prevent click from firing after touchend
-        break;
-      }
-      t=t.parentElement;
-    }
-  },{passive:false});
-  document.addEventListener('touchend',handleTouch,{passive:false});
-}());
+
 
 initDateBar();initAdmitBar();renderDash();
 // Check Firebase connection
